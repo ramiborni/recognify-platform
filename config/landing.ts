@@ -1,27 +1,28 @@
-import { FeatureLdg, InfoLdg, TestimonialType } from "types";
+import { InfoLdg, IntegrationLdg, TestimonialType } from "types";
 
 export const infos: InfoLdg[] = [
   {
-    title: "Empower your projects",
+    title: "Why is Recognify the best for your team?",
     description:
-      "Unlock the full potential of your projects with our open-source SaaS platform. Collaborate seamlessly, innovate effortlessly, and scale limitlessly.",
-    image: "/_static/illustrations/work-from-home.jpg",
+      "Remote work can feel isolating, but Recognify ensures your team feels valued and connected.",
+    image: "/_static/illustrations/work-party.svg",
     list: [
       {
-        title: "Collaborative",
-        description: "Work together with your team members in real-time.",
-        icon: "laptop",
-      },
-      {
-        title: "Innovative",
-        description: "Stay ahead of the curve with access constant updates.",
-        icon: "settings",
-      },
-      {
-        title: "Scalable",
+        title: "Keeps Everyone Engaged",
         description:
-          "Our platform offers the scalability needed to adapt to your needs.",
-        icon: "search",
+          "Simple, meaningful recognition boosts motivation and morale.",
+        icon: "boost",
+      },
+      {
+        title: "Builds Stronger Teams",
+        description:
+          "Seamlessly strengthens bonds, no matter where your team is.",
+        icon: "arms",
+      },
+      {
+        title: "Grows with You",
+        description: "Scales effortlessly as your business expands.",
+        icon: "rocket",
       },
     ],
   },
@@ -52,48 +53,52 @@ export const infos: InfoLdg[] = [
   },
 ];
 
-export const features: FeatureLdg[] = [
+export const integrations: IntegrationLdg[] = [
   {
-    title: "Feature 1",
-    description:
-      "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
+    title: "Slack",
+    description: "Use Slack to send recognition messages to your team.",
     link: "/",
-    icon: "nextjs",
+    icon: "slack",
   },
   {
-    title: "Feature 2",
+    title: "Microsoft Teams",
+    soon: true,
     description:
-      "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
+      "Coming soon! Use Microsoft Teams to send recognition messages to your team.",
     link: "/",
-    icon: "google",
+    icon: "microsoftTeams",
   },
   {
-    title: "Feature 3",
+    title: "Google Workspace",
+    soon: true,
     description:
-      "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
+      "Coming soon! Use Google Workspace to send recognition messages to your team.",
     link: "/",
-    icon: "gitHub",
+    icon: "googleWorkspace",
   },
   {
-    title: "Feature 4",
+    title: "Trello",
+    soon: true,
     description:
-      "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
+      "Coming soon! Use Trello to send recognition messages to your team when a user completes a task.",
     link: "/",
-    icon: "laptop",
+    icon: "trello",
   },
   {
-    title: "Feature 5",
+    title: "Jira",
+    soon: true,
     description:
-      "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
+      "Coming soon! Use Jira to send recognition messages to your team.",
     link: "/",
-    icon: "user",
+    icon: "jira",
   },
   {
-    title: "Feature 6",
+    title: "Asana",
+    soon: true,
     description:
-      "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
+      "Coming soon! Use Asana to send recognition messages to your team.",
     link: "/",
-    icon: "copy",
+    icon: "asana",
   },
 ];
 

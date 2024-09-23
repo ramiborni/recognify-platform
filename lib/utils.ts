@@ -6,6 +6,8 @@ import { twMerge } from "tailwind-merge";
 import { env } from "@/env.mjs";
 import { siteConfig } from "@/config/site";
 
+import { prisma } from "./db";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

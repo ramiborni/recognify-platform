@@ -87,8 +87,9 @@ export type InfoLdg = {
   list: InfoList[];
 };
 
-export type FeatureLdg = {
+export type IntegrationLdg = {
   title: string;
+  soon?: boolean;
   description: string;
   link: string;
   icon: keyof typeof Icons;

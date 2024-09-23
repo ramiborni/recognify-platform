@@ -3,7 +3,7 @@ import Link from "next/link";
 import { env } from "@/env.mjs";
 import { siteConfig } from "@/config/site";
 import { cn, nFormatter } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/shared/icons";
 
 export default async function HeroLanding() {
@@ -27,7 +27,7 @@ export default async function HeroLanding() {
     <section className="space-y-6 py-12 sm:py-20 lg:py-20">
       <div className="container flex max-w-5xl flex-col items-center gap-5 text-center">
         <Link
-          href="https://twitter.com/miickasmt/status/1810465801649938857"
+          href="https://app.recognify.io/"
           className={cn(
             buttonVariants({ variant: "outline", size: "sm", rounded: "full" }),
             "px-4",
@@ -35,23 +35,24 @@ export default async function HeroLanding() {
           target="_blank"
         >
           <span className="mr-3">🎉</span>
-          <span className="hidden md:flex">Introducing&nbsp;</span> Next Auth
-          Roles Template on <Icons.twitter className="ml-2 size-3.5" />
+          <span className="flex">Recognify Beta is launched</span>
         </Link>
 
         <h1 className="text-balance font-urban text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-[66px]">
-          Kick off with a bang with{" "}
+          Feeling Disconnected?
+          <br />
           <span className="text-gradient_indigo-purple font-extrabold">
-            SaaS Starter
+            Recognify Brings Your Team Together
           </span>
         </h1>
 
         <p
-          className="max-w-2xl text-balance leading-normal text-muted-foreground sm:text-xl sm:leading-8"
+          className="w-full text-balance leading-normal text-muted-foreground sm:text-xl sm:leading-8"
           style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
         >
-          Build your next project using Next.js 14, Prisma, Neon, Auth.js v5,
-          Resend, React Email, Shadcn/ui, Stripe.
+          Combat isolation, boost morale, and bridge communication gaps in your
+          remote team. Recognify turns digital spaces into hubs of appreciation
+          and connection.
         </p>
 
         <div
@@ -59,20 +60,18 @@ export default async function HeroLanding() {
           style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
         >
           <Link
-            href="/pricing"
+            href="/register"
             prefetch={true}
             className={cn(
               buttonVariants({ size: "lg", rounded: "full" }),
               "gap-2",
             )}
           >
-            <span>Go Pricing</span>
+            <span>Start Recognizing</span>
             <Icons.arrowRight className="size-4" />
           </Link>
-          <Link
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
+          <Button
+            variant="ghost"
             className={cn(
               buttonVariants({
                 variant: "outline",
@@ -82,12 +81,10 @@ export default async function HeroLanding() {
               "px-5",
             )}
           >
-            <Icons.gitHub className="mr-2 size-4" />
             <p>
-              <span className="hidden sm:inline-block">Star on</span> GitHub{" "}
-              <span className="font-semibold">{nFormatter(stars)}</span>
+              <span className="hidden sm:inline-block">Watch Demo</span>
             </p>
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

@@ -5,14 +5,40 @@ import { Resend } from "resend";
 import { env } from "@/env.mjs";
 import { siteConfig } from "@/config/site";
 
+import { prisma } from "./db";
 import { getUserByEmail } from "./user";
+import { User } from "@prisma/client";
 
 export const resend = new Resend(env.RESEND_API_KEY);
 
+type GetUserByEmailData = {
+  name: string | null;
+  emailVerified: Date | null;
+} | null;
+
 export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
   async ({ identifier, url, provider }) => {
-    const user = await getUserByEmail(identifier);
-    if (!user || !user.name) return;
+    console.log(provider);
+    let user: GetUserByEmailData | User = await getUserByEmail(identifier);
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email: identifier,
+        },
+      });
+
+      const team = await prisma.team.create({
+        data: {
+          teamMembers: {
+            connect: {
+              id: (user as User).id,
+            }
+          }
+        },
+      });
+      
+    }
 
     const userVerified = user?.emailVerified ? true : false;
     const authSubject = userVerified
@@ -22,13 +48,10 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
     try {
       const { data, error } = await resend.emails.send({
         from: provider.from,
-        to:
-          process.env.NODE_ENV === "development"
-            ? "delivered@resend.dev"
-            : identifier,
+        to: identifier,
         subject: authSubject,
         react: MagicLinkEmail({
-          firstName: user?.name as string,
+          firstName: (user?.name as string) || "",
           actionUrl: url,
           mailType: userVerified ? "login" : "register",
           siteName: siteConfig.name,
@@ -46,6 +69,7 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
 
       // console.log(data)
     } catch (error) {
+      console.error(error);
       throw new Error("Failed to send verification email.");
     }
   };

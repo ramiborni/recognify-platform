@@ -30,7 +30,7 @@ export default function InfoLanding({
               return (
                 <div className="relative pl-8" key={index}>
                   <dt className="font-semibold">
-                    <Icon className="absolute left-0 top-1 size-5 stroke-purple-700" />
+                    <Icon className="absolute left-0 top-1 size-5 stroke-primary" />
                     <span>{item.title}</span>
                   </dt>
                   <dd className="text-sm text-muted-foreground">
@@ -47,13 +47,13 @@ export default function InfoLanding({
             reverse ? "order-1" : "order-2",
           )}
         >
-          <div className="aspect-video">
+          <div className="aspect-square">
             <Image
               className="size-full object-cover object-center"
               src={data.image}
               alt={data.title}
               width={1000}
-              height={500}
+              height={1000}
               priority={true}
             />
           </div>

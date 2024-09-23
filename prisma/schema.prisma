@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -62,12 +62,29 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+  stripeCustomerId       String?       @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?       @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?       @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime?     @map(name: "stripe_current_period_end")
+  recognitionsGiven      Recognition[] @relation("GivenRecognitions")
+  recognitionsReceived   Recognition[] @relation("ReceivedRecognitions")
+  Feedback               Feedback[]
 
-  @@map(name: "users")
+  Team         Team?   @relation(fields: [teamId], references: [id])
+  teamId       String?
+  isTeamLeader Boolean @default(true)
+}
+
+model Team {
+  id   String @id @default(cuid())
+  name String?
+
+  teamMembers User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Survey Survey[]
 }
 
 model VerificationToken {
@@ -77,4 +94,65 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map(name: "verification_tokens")
+}
+
+model Recognition {
+  id         String   @id @default(uuid())
+  message    String
+  giver      User     @relation("GivenRecognitions", fields: [giverId], references: [id])
+  giverId    String
+  receiver   User     @relation("ReceivedRecognitions", fields: [receiverId], references: [id])
+  receiverId String
+  isPublic   Boolean  @default(false)
+  reactions  RecognationReaction[]
+  badges     RecognationBadges[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum RecognationReaction {
+  LIKE
+  LOVE
+  CLAP
+  THANK
+}
+
+enum RecognationBadges {
+  STAR_PERFORMER
+  OUTSTANDING_ACHIEVEMENT
+  GREAT_TEAMWORK
+  INNOVATIVE_THINKER
+  CUSTOMER_FAVOURITE
+  LEADER
+}
+
+model Survey {
+  id        String       @id @default(uuid())
+  title     String
+  questions String[] // You can store JSON array of questions
+  responses Feedback[]
+  Team      Team         @relation(fields: [teamId], references: [id])
+  teamId    String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  status    SurveyStatus @default(PENDING)
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  surveyId  String
+  survey    Survey   @relation(fields: [surveyId], references: [id])
+  response  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+enum SurveyStatus {
+  PENDING
+  ACTIVE
+  CLOSED
+  COMPLETED
 }

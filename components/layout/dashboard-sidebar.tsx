@@ -72,7 +72,13 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
           >
             <div className="flex h-full max-h-screen flex-1 flex-col gap-2">
               <div className="flex h-14 items-center p-4 lg:h-[60px]">
-                {isSidebarExpanded ? <ProjectSwitcher /> : null}
+                {
+                  <Link href="/" className="flex items-center gap-3">
+                    <span className="font-urban text-3xl font-bold text-primary">
+                      {siteConfig.name}
+                    </span>
+                  </Link>
+                }
 
                 <Button
                   variant="ghost"
