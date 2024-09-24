@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTeamSurveys } from "@/actions/get-team-surveys";
 
 import { Button } from "@/components/ui/button";
@@ -13,11 +14,13 @@ const NoSurveysCard = async () => {
   return (
     <EmptyPlaceholder>
       <EmptyPlaceholder.Icon name="post" />
-      <EmptyPlaceholder.Title>No content created</EmptyPlaceholder.Title>
+      <EmptyPlaceholder.Title>No Surveys</EmptyPlaceholder.Title>
       <EmptyPlaceholder.Description>
-        You don&apos;t have any content yet. Start creating content.
+        Create your first survey and get feedback from your team.
       </EmptyPlaceholder.Description>
-      <Button>Add Content</Button>
+      <Link href="/dashboard/survey/new">
+        <Button>Create Survey</Button>
+      </Link>
     </EmptyPlaceholder>
   );
 };

@@ -13,6 +13,7 @@ import {
   ChevronRight,
   ChevronsUp,
   ChevronUp,
+  ClipboardCheck,
   Copy,
   CreditCard,
   File,
@@ -232,6 +233,7 @@ export const Icons = {
   asana: ({ ...props }: any) => (
     <Image {...props} src={AsanaLogo as unknown as string} alt="Asana" />
   ),
+  recognition: ClipboardCheck,
   rocket: Rocket,
   arms: BicepsFlexed,
   boost: ChevronsUp,

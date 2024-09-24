@@ -8,6 +8,7 @@ import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
 import FirstThingsToDo from "./components/first-things-to-do";
 import NoSurveysCard from "./components/no-surveys";
+import NoRecognitionCard from "./components/no-recognition-card";
 
 export const metadata = constructMetadata({
   title: "Dashboard – SaaS Starter",
@@ -24,6 +25,9 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-8 lg:flex-row">
         <NoSurveysCard />
         <FirstThingsToDo />
+      </div>
+      <div className="my-6 flex flex-col">
+        <NoRecognitionCard />
       </div>
     </>
   );
