@@ -20,6 +20,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   if (!user) redirect("/login");
 
+
   const filteredLinks = sidebarLinks.map((section) => ({
     ...section,
     items: section.items.filter(

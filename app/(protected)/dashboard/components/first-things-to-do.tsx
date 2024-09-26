@@ -22,7 +22,7 @@ const FirstThingsToDo = () => {
       icon: <UsersIcon className="size-6" />,
       title: "Invite your team",
       description: "Invite your team to send them recognations and feedbacks.",
-      href: "/dashboard/invite",
+      href: "/dashboard/team/invite",
     },
     {
       icon: <Text className="size-6" />,

@@ -1,4 +1,8 @@
-import { MagicLinkEmail } from "@/emails/magic-link-email";
+import {
+  InviteMagicLinkEmail,
+  MagicLinkEmail,
+} from "@/emails/magic-link-email";
+import { User } from "@prisma/client";
 import { EmailConfig } from "next-auth/providers/email";
 import { Resend } from "resend";
 
@@ -7,7 +11,6 @@ import { siteConfig } from "@/config/site";
 
 import { prisma } from "./db";
 import { getUserByEmail } from "./user";
-import { User } from "@prisma/client";
 
 export const resend = new Resend(env.RESEND_API_KEY);
 
@@ -33,11 +36,10 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
           teamMembers: {
             connect: {
               id: (user as User).id,
-            }
-          }
+            },
+          },
         },
       });
-      
     }
 
     const userVerified = user?.emailVerified ? true : false;
@@ -73,3 +75,40 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
       throw new Error("Failed to send verification email.");
     }
   };
+
+export const sendJoinRequest = async (email: string) => {
+  const user: GetUserByEmailData | User = await getUserByEmail(email);
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  const userVerified = user?.emailVerified ? true : false;
+  const authSubject = "You have been invited to join a team";
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: env.EMAIL_FROM,
+      to: email,
+      subject: authSubject,
+      react: InviteMagicLinkEmail({
+        firstName: (user?.name as string) || "",
+        actionUrl: "https://google.com",
+        mailType: "join-team",
+        siteName: siteConfig.name,
+      }),
+      // Set this to prevent Gmail from threading emails.
+      // More info: https://resend.com/changelog/custom-email-headers
+      headers: {
+        "X-Entity-Ref-ID": new Date().getTime() + "",
+      },
+    });
+
+    if (error || !data) {
+      throw new Error(error?.message);
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to send verification email.");
+  }
+};

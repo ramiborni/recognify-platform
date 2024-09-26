@@ -12,6 +12,7 @@ datasource db {
 
 enum UserRole {
   ADMIN
+  TEAM_LEADER
   USER
 }
 
@@ -76,7 +77,7 @@ model User {
 }
 
 model Team {
-  id   String @id @default(cuid())
+  id   String  @id @default(cuid())
   name String?
 
   teamMembers User[]
@@ -97,17 +98,17 @@ model VerificationToken {
 }
 
 model Recognition {
-  id         String   @id @default(uuid())
+  id         String                @id @default(uuid())
   message    String
-  giver      User     @relation("GivenRecognitions", fields: [giverId], references: [id])
+  giver      User                  @relation("GivenRecognitions", fields: [giverId], references: [id])
   giverId    String
-  receiver   User     @relation("ReceivedRecognitions", fields: [receiverId], references: [id])
+  receiver   User                  @relation("ReceivedRecognitions", fields: [receiverId], references: [id])
   receiverId String
-  isPublic   Boolean  @default(false)
+  isPublic   Boolean               @default(false)
   reactions  RecognationReaction[]
   badges     RecognationBadges[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
 }
 
 enum RecognationReaction {
@@ -148,7 +149,6 @@ model Feedback {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 enum SurveyStatus {
   PENDING

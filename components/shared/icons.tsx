@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   ArrowRight,
   ArrowUpRight,
+  Award,
   Badge,
   BadgeCheck,
   BicepsFlexed,
@@ -39,12 +40,16 @@ import {
   SunMedium,
   Trash,
   User,
+  Users,
   X,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
 
 export const Icons = {
+  clipboard: ClipboardCheck,
+  users: Users,
+  award: Award,
   slack: ({ ...props }: LucideProps) => (
     <svg
       {...props}
@@ -304,7 +309,8 @@ export const Icons = {
   home: Home,
   laptop: Laptop,
   lineChart: LineChart,
-  logo: ({ ...props }: LucideProps) => <></>,
+  logo: ({ ...props }: LucideProps) => <>
+  </>,
   media: Image,
   messages: MessagesSquare,
   moon: Moon,
