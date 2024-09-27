@@ -20,6 +20,14 @@ export const inviteTeamMember = async (userId: string, userEmail: string, userFu
         throw new Error("We apologize, but you do not have a team to invite members to.");
     }
 
+    const userExists = await prisma.user.findUnique({
+        where: { email: userEmail },
+    });
+
+    if(userExists){
+        throw new Error("We apologize, but the user you are trying to invite is already a member of the team.");
+    }
+
     // Invite team member
     const invitedUser = await prisma.user.create({
         data: {
@@ -40,14 +48,4 @@ export const inviteTeamMember = async (userId: string, userEmail: string, userFu
     });
 
 
-    const signInResult = await signIn("resend-invite", {
-        email: userEmail,
-        redirect: false,
-        callbackUrl: "/dashboard/invited-user",
-    });
-
-    if(signInResult?.error){
-        throw new Error("We apologize, but we were unable to invite the team member.");
-    }
-  
 }

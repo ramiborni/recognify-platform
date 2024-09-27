@@ -16,11 +16,5 @@ export default {
       from: env.EMAIL_FROM,
       sendVerificationRequest,
     }),
-    Resend({
-      id: "resend-invite",
-      apiKey: env.RESEND_API_KEY,
-      from: env.EMAIL_FROM,
-      sendJoinRequest,
-    }),
   ],
 } satisfies NextAuthConfig;

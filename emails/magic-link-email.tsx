@@ -16,6 +16,7 @@ import { Icons } from "../components/shared/icons";
 type MagicLinkEmailProps = {
   actionUrl: string;
   firstName: string;
+  invitedBy?: string;
   mailType: "login" | "register" | "join-team";
   siteName: string;
 };
@@ -70,6 +71,7 @@ export const MagicLinkEmail = ({
 
 export const InviteMagicLinkEmail = ({
   firstName = "",
+  invitedBy = "",
   actionUrl,
   mailType,
   siteName,
@@ -77,7 +79,7 @@ export const InviteMagicLinkEmail = ({
   <Html>
     <Head />
     <Preview>
-      You have been invited to join a team in Recognify!
+      You have been invited by {invitedBy} to join a team in Recognify!
     </Preview>
     <Tailwind>
       <Body className="bg-white font-sans">
@@ -85,7 +87,7 @@ export const InviteMagicLinkEmail = ({
           <Icons.logo className="m-auto block size-10" />
           <Text className="text-base">Hi {firstName},</Text>
           <Text className="text-base">
-            Welcome to {siteName}! You have been invited to join a team, Click the link below to{" "}
+            Welcome to {siteName}! You have been invited by {invitedBy} to join a team, Click the link below to{" "}
             {mailType === "login" ? "sign in to" : "activate"} your account.
           </Text>
           <Section className="my-5 text-center">

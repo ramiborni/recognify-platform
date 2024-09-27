@@ -24,3 +24,4 @@ export const DELETE = auth(async (req) => {
 
   return new Response("User deleted successfully!", { status: 200 });
 });
+

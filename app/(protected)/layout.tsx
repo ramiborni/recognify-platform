@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { sidebarLinks } from "@/config/dashboard";
 import { getCurrentUser } from "@/lib/session";
+import { Toaster } from "@/components/ui/toaster";
 import { SearchCommand } from "@/components/dashboard/search-command";
 import {
   DashboardSidebar,
@@ -19,7 +20,6 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
   const user = await getCurrentUser();
 
   if (!user) redirect("/login");
-
 
   const filteredLinks = sidebarLinks.map((section) => ({
     ...section,
@@ -50,6 +50,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
           <MaxWidthWrapper className="flex h-full max-w-7xl flex-col gap-4 px-0 lg:gap-6">
             {children}
           </MaxWidthWrapper>
+          <Toaster />
         </main>
       </div>
     </div>

@@ -11,6 +11,7 @@ import { siteConfig } from "@/config/site";
 
 import { prisma } from "./db";
 import { getUserByEmail } from "./user";
+import { getTeamLeader } from "@/actions/get-team-leader";
 
 export const resend = new Resend(env.RESEND_API_KEY);
 
@@ -40,6 +41,30 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
           },
         },
       });
+    } else {
+      const user = await prisma.user.findUnique({
+        where: { email: identifier },
+      });
+
+      if (!user?.teamId) {
+        const team = await prisma.team.create({
+          data: {
+            teamMembers: {
+              connect: {
+                id: (user as User).id,
+              },
+            },
+          },
+        });
+
+        await prisma.user.update({
+          where: { email: identifier },
+          data: {
+            teamId: team.id,
+            isTeamLeader: true,
+          },
+        });
+      }
     }
 
     const userVerified = user?.emailVerified ? true : false;
@@ -48,25 +73,51 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
       : "Activate your account";
 
     try {
-      const { data, error } = await resend.emails.send({
-        from: provider.from,
-        to: identifier,
-        subject: authSubject,
-        react: MagicLinkEmail({
-          firstName: (user?.name as string) || "",
-          actionUrl: url,
-          mailType: userVerified ? "login" : "register",
-          siteName: siteConfig.name,
-        }),
-        // Set this to prevent Gmail from threading emails.
-        // More info: https://resend.com/changelog/custom-email-headers
-        headers: {
-          "X-Entity-Ref-ID": new Date().getTime() + "",
-        },
-      });
+      if ((user as User).isTeamLeader && (user as User).teamId) {
+        const { data, error } = await resend.emails.send({
+          from: provider.from,
+          to: identifier,
+          subject: authSubject,
+          react: MagicLinkEmail({
+            firstName: (user?.name as string) || "",
+            actionUrl: url,
+            mailType: userVerified ? "login" : "register",
+            siteName: siteConfig.name,
+          }),
+          // Set this to prevent Gmail from threading emails.
+          // More info: https://resend.com/changelog/custom-email-headers
+          headers: {
+            "X-Entity-Ref-ID": new Date().getTime() + "",
+          },
+        });
 
-      if (error || !data) {
-        throw new Error(error?.message);
+        if (error || !data) {
+          throw new Error(error?.message);
+        }
+      } else if(!(user as User).isTeamLeader && (user as User).teamId && !(user as User).emailVerified) {
+        const teamLeader = await getTeamLeader((user as User).teamId!);
+
+        const { data, error } = await resend.emails.send({
+          from: provider.from,
+          to: identifier,
+          subject: authSubject,
+          react: InviteMagicLinkEmail({
+            firstName: (user?.name as string) || "",
+            invitedBy: teamLeader?.name!,
+            actionUrl: url,
+            mailType: "join-team",
+            siteName: siteConfig.name,
+          }),
+          // Set this to prevent Gmail from threading emails.
+          // More info: https://resend.com/changelog/custom-email-headers
+          headers: {
+            "X-Entity-Ref-ID": new Date().getTime() + "",
+          },
+        });
+
+        if (error || !data) {
+          throw new Error(error?.message);
+        }
       }
 
       // console.log(data)
@@ -76,7 +127,11 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
     }
   };
 
-export const sendJoinRequest = async (email: string) => {
+export const sendJoinRequest: EmailConfig["sendVerificationRequest"] = async ({
+  identifier: email,
+  url,
+  provider,
+}) => {
   const user: GetUserByEmailData | User = await getUserByEmail(email);
 
   if (!user) {
