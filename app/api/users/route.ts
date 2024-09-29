@@ -1,3 +1,4 @@
+import { NextApiRequest } from "next";
 import {
   validateToken,
   type jwtValidationResponse,
@@ -48,8 +49,14 @@ export const GET = async (req, res) => {
   return new Response(JSON.stringify(dbUser), { status: 200 });
 };
 
-export const POST = async (req, res) => {
-  const token: string = req.headers.get("Authorization").replace("Bearer ", "");
+export const POST = async (req: Request, res) => {
+  const authHeader: string = req.headers.get("Authorization")!;
+  if (!authHeader || typeof authHeader !== "string") {
+    return new Response("Authorization header missing or invalid", {
+      status: 401,
+    });
+  }
+  const token: string = authHeader.replace("Bearer ", "");
   const validationResult: jwtValidationResponse = await validateToken({
     token,
     domain: process.env.KINDE_ISSUER_URL,
@@ -73,18 +80,19 @@ export const POST = async (req, res) => {
     return new Response("Invalid user", { status: 401 });
   }
 
-  const inviteToken = req.body.inviteToken;
+  const body = await req.json();
+  const inviteToken = body.inviteToken;
 
   let invitation;
 
-  if(inviteToken){
+  if (inviteToken) {
     invitation = await prisma.teamInvitation.findUnique({
       where: {
         token: inviteToken,
       },
       include: {
         team: true,
-      }
+      },
     });
   }
 
@@ -121,6 +129,11 @@ export const POST = async (req, res) => {
               id: dbUser.id,
             },
           },
+        },
+      });
+      await prisma.teamInvitation.delete({
+        where: {
+          token: inviteToken,
         },
       });
     }

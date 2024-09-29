@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const addUser = async (token: string,inviteToken: string) => {
+export const addUser = async (token: string, inviteToken: string) => {
   const response = await axios.post(
     "/api/users",
     {
@@ -9,6 +9,8 @@ export const addUser = async (token: string,inviteToken: string) => {
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+
       },
     },
   );

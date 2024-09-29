@@ -14,6 +14,7 @@ import { UserAccountNav } from "@/components/layout/user-account-nav";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 import OrgModel from "./dashboard/components/org-model";
+import React from "react";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
