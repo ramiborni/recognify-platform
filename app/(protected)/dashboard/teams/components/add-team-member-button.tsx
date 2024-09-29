@@ -8,29 +8,36 @@ import { signIn } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
+interface AddTeamMemberMutateProps {
+  invitationName: string;
+  invitationEmail: string;
+  token: string;
+}
 
 interface AddTeamMemberButtonProps {}
 const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
-  const { mutate: addTeamMemberMutate } = useMutation({
-    mutationFn: () => addTeamMember("Rami", "rikiraspoutine@googlemail.com"),
-    onSuccess: async () => {
-      const signInResult = await signIn("resend-invite", {
-        email: "rikiraspoutine@googlemail.com",
-        redirect: false,
-        callbackUrl: "/dashboard/invited-user",
-      });
+  const {
+    getToken,
+    isAuthenticated,
+    isLoading: isKindeLoading,
+  } = useKindeBrowserClient();
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-      if (signInResult?.error) {
-        return toast({
-          variant: "destructive",
-          title: "Oops! Something went wrong",
-          description: "An error occurred while inviting the team member.",
-        });
-      }
+  const { mutate: addTeamMemberMutate } = useMutation({
+    mutationFn: async ({invitationName, invitationEmail, token}: AddTeamMemberMutateProps) => await addTeamMember(invitationName, invitationEmail, token),
+    onSuccess: async () => {
       toast({
-        title: "Team member has been added",
-        description: "The team member has been successfully added.",
-      });
+        variant: "success",
+        title: "Team member added successfully",
+        description: `The team member ${name} has been added successfully.`,
+      })
     },
     onError: (error: AxiosError) => {
       toast({
@@ -44,13 +51,53 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
   });
 
   const addMember = () => {
-    addTeamMemberMutate();
+    if (!name || !email) {
+      return toast({
+        variant: "destructive",
+        title: "Missing Information",
+        description: "Please provide both name and email to add a team member.",
+      });
+    }
+  
+    addTeamMemberMutate({
+      invitationName: name,
+      invitationEmail: email,
+      token: getToken()!,
+    });
+    setIsOpen(false);
   };
 
   return (
-    <Button onClick={addMember}>
-      <PlusIcon className="size-6" /> &nbsp; Add team member
-    </Button>
+    <>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          <Button>
+            <PlusIcon className="size-6" /> &nbsp; Add team member
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>Add Team Member</DialogTitle>
+          <DialogDescription>
+            Please enter the details of the team member you want to add.
+          </DialogDescription>
+          <Input
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <DialogFooter>
+            <Button onClick={addMember}>
+              Invite team member
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

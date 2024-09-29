@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import {
+  LogoutLink,
+  useKindeBrowserClient,
+} from "@kinde-oss/kinde-auth-nextjs";
 import { LayoutDashboard, Lock, LogOut, Settings } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
 import { Drawer } from "vaul";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -17,8 +20,7 @@ import {
 import { UserAvatar } from "@/components/shared/user-avatar";
 
 export function UserAccountNav() {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { user, isLoading } = useKindeBrowserClient();
 
   const [open, setOpen] = useState(false);
   const closeDrawer = () => {
@@ -37,7 +39,10 @@ export function UserAccountNav() {
       <Drawer.Root open={open} onClose={closeDrawer}>
         <Drawer.Trigger onClick={() => setOpen(true)}>
           <UserAvatar
-            user={{ name: user.name || null, image: user.image || null }}
+            user={{
+              name: `${user.given_name} ${user.family_name}` || null,
+              image: user.picture || null,
+            }}
             className="size-9 border"
           />
         </Drawer.Trigger>
@@ -53,7 +58,9 @@ export function UserAccountNav() {
 
             <div className="flex items-center justify-start gap-2 p-2">
               <div className="flex flex-col">
-                {user.name && <p className="font-medium">{user.name}</p>}
+                {`${user.given_name} ${user.family_name}` && (
+                  <p className="font-medium">{`${user.given_name} ${user.family_name}`}</p>
+                )}
                 {user.email && (
                   <p className="w-[200px] truncate text-muted-foreground">
                     {user?.email}
@@ -63,19 +70,6 @@ export function UserAccountNav() {
             </div>
 
             <ul role="list" className="mb-14 mt-1 w-full text-muted-foreground">
-              {user.role === "ADMIN" ? (
-                <li className="rounded-lg text-foreground hover:bg-muted">
-                  <Link
-                    href="/admin"
-                    onClick={closeDrawer}
-                    className="flex w-full items-center gap-3 px-2.5 py-2"
-                  >
-                    <Lock className="size-4" />
-                    <p className="text-sm">Admin</p>
-                  </Link>
-                </li>
-              ) : null}
-
               <li className="rounded-lg text-foreground hover:bg-muted">
                 <Link
                   href="/dashboard"
@@ -98,20 +92,14 @@ export function UserAccountNav() {
                 </Link>
               </li>
 
-              <li
-                className="rounded-lg text-foreground hover:bg-muted"
-                onClick={(event) => {
-                  event.preventDefault();
-                  signOut({
-                    callbackUrl: `${window.location.origin}/`,
-                  });
-                }}
-              >
-                <div className="flex w-full items-center gap-3 px-2.5 py-2">
-                  <LogOut className="size-4" />
-                  <p className="text-sm">Log out </p>
-                </div>
-              </li>
+              <LogoutLink postLogoutRedirectURL="/">
+                <li className="rounded-lg text-foreground hover:bg-muted">
+                  <div className="flex w-full items-center gap-3 px-2.5 py-2">
+                    <LogOut className="size-4" />
+                    <p className="text-sm">Log out </p>
+                  </div>
+                </li>
+              </LogoutLink>
             </ul>
           </Drawer.Content>
           <Drawer.Overlay />
@@ -124,14 +112,19 @@ export function UserAccountNav() {
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
         <UserAvatar
-          user={{ name: user.name || null, image: user.image || null }}
+          user={{
+            name: `${user.given_name} ${user.family_name}` || null,
+            image: user.picture || null,
+          }}
           className="size-8 border"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            {user.name && <p className="font-medium">{user.name}</p>}
+            {`${user.given_name} ${user.family_name}` && (
+              <p className="font-medium">{`${user.given_name} ${user.family_name}`}</p>
+            )}
             {user.email && (
               <p className="w-[200px] truncate text-sm text-muted-foreground">
                 {user?.email}
@@ -140,15 +133,6 @@ export function UserAccountNav() {
           </div>
         </div>
         <DropdownMenuSeparator />
-
-        {user.role === "ADMIN" ? (
-          <DropdownMenuItem asChild>
-            <Link href="/admin" className="flex items-center space-x-2.5">
-              <Lock className="size-4" />
-              <p className="text-sm">Admin</p>
-            </Link>
-          </DropdownMenuItem>
-        ) : null}
 
         <DropdownMenuItem asChild>
           <Link href="/dashboard" className="flex items-center space-x-2.5">
@@ -167,20 +151,14 @@ export function UserAccountNav() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onSelect={(event) => {
-            event.preventDefault();
-            signOut({
-              callbackUrl: `${window.location.origin}/`,
-            });
-          }}
-        >
-          <div className="flex items-center space-x-2.5">
-            <LogOut className="size-4" />
-            <p className="text-sm">Log out </p>
-          </div>
-        </DropdownMenuItem>
+        <LogoutLink postLogoutRedirectURL="/">
+          <DropdownMenuItem className="cursor-pointer">
+            <div className="flex items-center space-x-2.5">
+              <LogOut className="size-4" />
+              <p className="text-sm">Log out </p>
+            </div>
+          </DropdownMenuItem>
+        </LogoutLink>
       </DropdownMenuContent>
     </DropdownMenu>
   );

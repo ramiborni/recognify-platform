@@ -1,18 +1,20 @@
 import "server-only";
 
 import { cache } from "react";
-import { auth } from "@/auth";
 
 import { prisma } from "./db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export const getCurrentUser = cache(async () => {
-  const session = await auth();
-  if (!session?.user) {
+  const {getUser} = getKindeServerSession();
+  const kindeUser = await getUser();
+
+  if (!kindeUser) {
     return undefined;
   }
   const user = prisma.user.findUnique({
     where: {
-      id: session.user.id,
+      id: kindeUser.id,
     },
     include: {
       Team: true,

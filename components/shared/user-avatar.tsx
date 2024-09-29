@@ -14,7 +14,7 @@ export function UserAvatar({ user, ...props }: UserAvatarProps) {
       {user.image ? (
         <AvatarImage
           alt="Picture"
-          src={user.image}
+          src={user.image || user.name?.charAt(0)}
           referrerPolicy="no-referrer"
         />
       ) : (

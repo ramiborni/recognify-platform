@@ -3,6 +3,10 @@
 import { useContext } from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import {
+  RegisterLink,
+  useKindeBrowserClient,
+} from "@kinde-oss/kinde-auth-nextjs";
 import { useSession } from "next-auth/react";
 
 import { docsConfig } from "@/config/docs";
@@ -27,6 +31,8 @@ export function NavBar({ scroll = false }: NavBarProps) {
   const { data: session, status } = useSession();
   const { setShowSignInModal } = useContext(ModalContext);
 
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+
   const selectedLayout = useSelectedLayoutSegment();
   const documentation = selectedLayout === "docs";
 
@@ -49,7 +55,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
       >
         <div className="flex gap-6 md:gap-10">
           <Link href="/" className="flex items-center space-x-1.5">
-            <Icons.logo className="size-10"/>
+            <Icons.logo className="size-10" />
             <span className="font-urban text-2xl font-bold text-primary">
               {siteConfig.name}
             </span>
@@ -100,22 +106,24 @@ export function NavBar({ scroll = false }: NavBarProps) {
             </div>
           ) : null}
 
-          {session ? (
-            <Link
-              href={session.user.role === "ADMIN" ? "/admin" : "/dashboard"}
-              className="hidden md:block"
-            >
-              <Button
-                className="gap-2 px-5"
-                variant="default"
-                size="sm"
-                rounded="full"
-              >
-                <span>Dashboard</span>
-              </Button>
-            </Link>
-          ) : status === "unauthenticated" ? (
-            <Link href="/register">
+          {isLoading ? (
+            <Skeleton className="hidden h-9 w-28 rounded-full lg:flex" />
+          ) : isAuthenticated ? (
+            <>
+              <Link href="/dashboard">
+                <Button
+                  className="hidden gap-2 px-5 md:flex"
+                  variant="default"
+                  size="sm"
+                  rounded="full"
+                >
+                  <span>Dashboard</span>
+                  <Icons.arrowRight className="size-4" />
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <RegisterLink>
               <Button
                 className="hidden gap-2 px-5 md:flex"
                 variant="default"
@@ -125,9 +133,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
                 <span>Get Started</span>
                 <Icons.arrowRight className="size-4" />
               </Button>
-            </Link>
-          ) : (
-            <Skeleton className="hidden h-9 w-28 rounded-full lg:flex" />
+            </RegisterLink>
           )}
         </div>
       </MaxWidthWrapper>
