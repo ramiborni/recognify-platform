@@ -1,14 +1,13 @@
-import { inviteTeamMember } from "@/actions/invite-team-member";
-import { auth } from "@/auth";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
 import { UserRole } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
+import { resend } from "@/lib/email";
+import { InviteLinkEmail } from "@/emails/invite-link-email";
 
 export const POST = async (req, res) => {
   try{
-    console.log("IM IN THE POST FUNCTION");
     const token: string = req.headers
       .get("Authorization")!
       .replace("Bearer ", "");
@@ -72,6 +71,29 @@ export const POST = async (req, res) => {
         },
       },
     });
+
+    const { data, error } = await resend.emails.send({
+      from: "no-reply@recognify.io",
+      to: email,
+      subject: "You have been invited to join a team in Recognify!",
+      react: InviteLinkEmail({
+        invitationName: name,
+        invitationEmail: email,
+        senderName: user.name!,
+        invitationToken: invitedMember.token,
+      }),
+      // Set this to prevent Gmail from threading emails.
+      // More info: https://resend.com/changelog/custom-email-headers
+      headers: {
+        "X-Entity-Ref-ID": new Date().getTime() + "",
+      },
+    });
+    console.log(data);
+  
+    if (error || !data) {
+      console.error(error);
+      return new Response("Can't send invitation email", { status: 500 });
+    }
   
     return new Response(
       JSON.stringify({

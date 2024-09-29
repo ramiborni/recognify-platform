@@ -17,11 +17,13 @@ interface InviteLinkEmailProps {
   invitationName: string;
   invitationEmail: string;
   senderName: string;
+  invitationToken: string
 }
 export const InviteLinkEmail = ({
   invitationName,
   invitationEmail,
   senderName,
+  invitationToken
 }: InviteLinkEmailProps) => {
   return (
     <Html>
@@ -32,7 +34,7 @@ export const InviteLinkEmail = ({
       <Tailwind>
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-5 pb-12">
-            <Text className="font-urban text-2xl font-bold text-primary">
+            <Text className="font-urban text-4xl font-bold text-primary">
               Recognify
             </Text>
             <Text className="text-base">Hi {invitationName},</Text>
@@ -43,7 +45,7 @@ export const InviteLinkEmail = ({
             <Section className="my-5 text-center">
               <Button
                 className="inline-block rounded-md bg-zinc-900 px-4 py-2 text-base text-white no-underline"
-                href={`https://recognify.com/invite/${invitationEmail}`}
+                href={`https://recognify.com/invite/${invitationToken}`}
               >
                 Activate Account
               </Button>

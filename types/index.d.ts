@@ -101,3 +101,8 @@ export type TestimonialType = {
   image: string;
   review: string;
 };
+
+
+export interface AuthorizedRequest{
+  token: string;
+}

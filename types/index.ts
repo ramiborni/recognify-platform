@@ -1,3 +1,0 @@
-interface AuthorizedRequest{
-    token: string;
-}

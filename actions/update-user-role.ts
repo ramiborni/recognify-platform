@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
 import { UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
@@ -13,11 +12,8 @@ export type FormData = {
 
 export async function updateUserRole(userId: string, data: FormData) {
   try {
-    const session = await auth();
 
-    if (!session?.user || session?.user.id !== userId) {
-      throw new Error("Unauthorized");
-    }
+
 
     const { role } = userRoleSchema.parse(data);
 

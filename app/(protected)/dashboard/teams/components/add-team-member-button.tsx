@@ -1,17 +1,25 @@
 "use client";
 
+import { useState } from "react";
 import { addTeamMember } from "@/actions/api/teams";
+import { InviteLinkEmail } from "@/emails/invite-link-email";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { PlusIcon } from "lucide-react";
-import { signIn } from "next-auth/react";
 
+import { resend } from "@/lib/email";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { toast } from "@/components/ui/use-toast";
 
 interface AddTeamMemberMutateProps {
   invitationName: string;
@@ -22,6 +30,7 @@ interface AddTeamMemberMutateProps {
 interface AddTeamMemberButtonProps {}
 const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
   const {
+    user,
     getToken,
     isAuthenticated,
     isLoading: isKindeLoading,
@@ -31,13 +40,18 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
   const [email, setEmail] = useState("");
 
   const { mutate: addTeamMemberMutate } = useMutation({
-    mutationFn: async ({invitationName, invitationEmail, token}: AddTeamMemberMutateProps) => await addTeamMember(invitationName, invitationEmail, token),
+    mutationFn: async ({
+      invitationName,
+      invitationEmail,
+      token,
+    }: AddTeamMemberMutateProps) =>
+      await addTeamMember(invitationName, invitationEmail, token),
     onSuccess: async () => {
       toast({
         variant: "success",
         title: "Team member added successfully",
         description: `The team member ${name} has been added successfully.`,
-      })
+      });
     },
     onError: (error: AxiosError) => {
       toast({
@@ -58,7 +72,7 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
         description: "Please provide both name and email to add a team member.",
       });
     }
-  
+
     addTeamMemberMutate({
       invitationName: name,
       invitationEmail: email,
@@ -91,9 +105,7 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <DialogFooter>
-            <Button onClick={addMember}>
-              Invite team member
-            </Button>
+            <Button onClick={addMember}>Invite team member</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

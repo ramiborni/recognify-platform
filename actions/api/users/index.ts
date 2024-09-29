@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import axios from "axios";
 
 export const addUser = async (token: string, inviteToken: string) => {
@@ -25,5 +26,5 @@ export const getUser = async (token: string) => {
     },
   });
 
-  return response.data;
+  return response.data as User;
 };

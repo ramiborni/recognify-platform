@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AddUserMutationProps } from "@/actions/api/users/types";
 
 const OrgModel = () => {
   const searchParams = useSearchParams();
@@ -100,7 +101,7 @@ const OrgModel = () => {
       <DialogHeader>
         <DialogTitle>Create Team</DialogTitle>
         <DialogDescription>
-          Let's create your first team to get started.
+          Let&apos;s create your first team to get started.
         </DialogDescription>
       </DialogHeader>
       <div>

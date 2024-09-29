@@ -44,7 +44,7 @@ const InvitationLandingPage = async ({
             collaborating with your new team.
           </p>
         </div>
-        <div className="flex flex-col pb-8 px-4">
+        <div className="flex flex-col px-4 pb-8">
           <JoinTeamBtn token={invitationToken} />
         </div>
       </Card>

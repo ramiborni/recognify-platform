@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db"
-import { sendJoinRequest } from "@/lib/email";
 import { signIn } from "next-auth/react";
 
 export const inviteTeamMember = async (userId: string, userEmail: string, userFullName: string) => {
