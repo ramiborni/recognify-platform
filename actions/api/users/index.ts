@@ -1,9 +1,11 @@
 import { User } from "@prisma/client";
 import axios from "axios";
 
+import { env } from "@/env.mjs";
+
 export const addUser = async (token: string, inviteToken: string) => {
   const response = await axios.post(
-    "/api/users",
+    env.NEXT_PUBLIC_APP_URL + "/api/users",
     {
       inviteToken: inviteToken,
     },
@@ -11,7 +13,6 @@ export const addUser = async (token: string, inviteToken: string) => {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-
       },
     },
   );
@@ -20,7 +21,7 @@ export const addUser = async (token: string, inviteToken: string) => {
 };
 
 export const getUser = async (token: string) => {
-  const response = await axios.get("/api/users", {
+  const response = await axios.get(env.NEXT_PUBLIC_APP_URL + "/api/users", {
     headers: {
       Authorization: `Bearer ${token}`,
     },

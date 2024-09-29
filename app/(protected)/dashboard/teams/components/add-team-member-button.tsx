@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { addTeamMember } from "@/actions/api/teams";
-import { InviteLinkEmail } from "@/emails/invite-link-email";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { PlusIcon } from "lucide-react";
-
-import { resend } from "@/lib/email";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import React from "react";
 
 interface AddTeamMemberMutateProps {
   invitationName: string;
