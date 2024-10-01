@@ -46,8 +46,8 @@ EmptyPlaceholder.Icon = function EmptyPlaceholderIcon({
   }
 
   return (
-    <div className="flex size-20 items-center justify-center rounded-full bg-muted">
-      <Icon className={cn("size-10", className)} {...props} />
+    <div className="flex size-20 items-center justify-center rounded-full bg-primary/10">
+      <Icon className={cn("size-10 text-primary", className)} {...props} />
     </div>
   );
 };

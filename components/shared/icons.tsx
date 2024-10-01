@@ -47,6 +47,7 @@ import {
 export type Icon = LucideIcon;
 
 export const Icons = {
+  team: Users,
   clipboard: ClipboardCheck,
   users: Users,
   award: Award,

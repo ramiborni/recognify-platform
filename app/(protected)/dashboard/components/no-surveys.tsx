@@ -3,6 +3,7 @@ import { getTeamSurveys } from "@/actions/get-team-surveys";
 
 import { Button } from "@/components/ui/button";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
+import React from "react";
 
 const NoSurveysCard = async () => {
   const surveys = await getTeamSurveys();
