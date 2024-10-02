@@ -20,6 +20,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "randomuser.me",
       },
+      {
+        protocol: "https",
+        hostname: "media.tenor.com"
+      },
+      {
+        protocol: "https",
+        hostname: "media1.giphy.com"
+      }
     ],
   },
   experimental: {
