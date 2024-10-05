@@ -5,13 +5,16 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { addUser } from "@/actions/api/users";
 import { useGetUser } from "@/actions/api/users/query";
+import { AddUserMutationProps } from "@/actions/api/users/types";
 import {
   CreateOrgLink,
   useKindeAuth,
   useKindeBrowserClient,
 } from "@kinde-oss/kinde-auth-nextjs";
 import { useMutation } from "@tanstack/react-query";
+import { set } from "date-fns";
 
+import { axiosConfig } from "@/lib/axios-config";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,24 +26,33 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AddUserMutationProps } from "@/actions/api/users/types";
 
 const OrgModel = () => {
   const searchParams = useSearchParams();
   const invitationToken = searchParams.get("invitationToken");
 
-  const { getToken, isAuthenticated } = useKindeBrowserClient();
   const {
-    data: user,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetUser(getToken()!);
+    user: kindeUser,
+    getToken,
+    isLoading: isAuthLoading,
+    isAuthenticated,
+  } = useKindeBrowserClient();
 
-  const { mutate: AddUserMutate } = useMutation({
-    mutationFn: async ({ token, inviteToken }: AddUserMutationProps) =>
-      await addUser(token, inviteToken),
+  const [isAxiosConfigured, setIsAxiosConfigured] = useState(false);
+
+  const [addUserReqSent, setAddUserReqSent] = useState(false);
+
+  useEffect(() => {
+    const accessToken = getToken();
+    if (accessToken) {
+      axiosConfig(accessToken!);
+      setIsAxiosConfigured(true);
+    }
+  }, [kindeUser, isAuthLoading, getToken]);
+
+  const { mutate: AddUserMutate, isError } = useMutation({
+    mutationFn: async ({ inviteToken }: AddUserMutationProps) =>
+      await addUser(inviteToken),
     onSuccess: () => setOpenOnBoardingDialog(true),
     onError: (error) => console.error(error),
   });
@@ -50,19 +62,11 @@ const OrgModel = () => {
   const [teamName, setTeamName] = useState("");
 
   useEffect(() => {
-    refetch && refetch();
-
-    if (
-      !user &&
-      !isLoading &&
-      isError &&
-      isAuthenticated &&
-      error &&
-      error.message !== "Request failed with status code 401"
-    ) {
-      AddUserMutate({ token: getToken()!, inviteToken: invitationToken! });
+    if (isAxiosConfigured && getToken() && !isError && !addUserReqSent) {
+      AddUserMutate({ inviteToken: invitationToken! });
+      setAddUserReqSent(true);
     }
-  }, [user, isAuthenticated, isLoading, isError, invitationToken]);
+  }, [invitationToken, getToken, isAxiosConfigured, addUserReqSent]);
 
   const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();

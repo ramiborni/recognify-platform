@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
 export async function checkPrivileges(userId) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: { Team: true },
+    include: { team: true },
   });
 
   if (!user) return null;

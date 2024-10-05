@@ -21,7 +21,6 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   role          UserRole  @default(USER)
@@ -33,11 +32,11 @@ model User {
   stripeCurrentPeriodEnd DateTime?     @map(name: "stripe_current_period_end")
   recognitionsGiven      Recognition[] @relation("GivenRecognitions")
   recognitionsReceived   Recognition[] @relation("ReceivedRecognitions")
-  Feedback               Feedback[]
+  feedbacks              Feedback[]
 
-  Team         Team?   @relation(fields: [teamId], references: [id])
+  team         Team?   @relation(fields: [teamId], references: [id])
   teamId       String?
-  isTeamLeader Boolean @default(true)
+  isTeamLeader Boolean @default(false)
 }
 
 model Team {
@@ -52,18 +51,20 @@ model Team {
   Survey Survey[]
 
   TeamInvitation TeamInvitation[]
+
+  recognitions Recognition[]
 }
 
-model TeamInvitation{
-  id         String   @id @default(cuid())
-  email      String
-  name       String
-  team       Team     @relation(fields: [teamId], references: [id])
-  teamId     String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model TeamInvitation {
+  id        String   @id @default(cuid())
+  email     String
+  name      String
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -83,8 +84,11 @@ model Recognition {
   receiver   User                  @relation("ReceivedRecognitions", fields: [receiverId], references: [id])
   receiverId String
   isPublic   Boolean               @default(false)
+  points     Int
   reactions  RecognationReaction[]
   badges     RecognationBadges[]
+  team       Team                  @relation(fields: [teamId], references: [id])
+  teamId     String
   createdAt  DateTime              @default(now())
   updatedAt  DateTime              @updatedAt
 }

@@ -29,13 +29,13 @@ const FirstThingsToDo = () => {
       title: "Create your first recognition",
       description:
         "Create your first recognition and boost moral for your team.",
-      href: "/dashboard/recognition/new",
+      href: "/dashboard/recognitions",
     },
     {
       icon: <List className="size-6" />,
       title: "Create your first survey",
       description: "Create your first survey and get feedback from your team.",
-      href: "/dashboard/survey/new",
+      href: "/dashboard/surveys",
     },
     {
       icon: <PhoneCallIcon className="size-6" />,

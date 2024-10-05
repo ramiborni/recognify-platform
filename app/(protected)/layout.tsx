@@ -14,13 +14,20 @@ import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 import OrgModel from "./dashboard/components/org-model";
 import { Icons } from "@/components/shared/icons";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { axiosConfig } from "@/lib/axios-config";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
 }
 
 export default async function Dashboard({ children }: ProtectedLayoutProps) {
+
+  const {getAccessTokenRaw} = await getKindeServerSession();
+  axiosConfig(await getAccessTokenRaw());
+
   const user = await getCurrentUser();
+
 
   const filteredLinks = sidebarLinks.map((section) => ({
     ...section,
@@ -30,6 +37,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
   }));
 
   const orgModelRendered = true;
+
 
   return (
     <Suspense

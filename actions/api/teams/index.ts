@@ -1,21 +1,24 @@
-import { env } from "@/env.mjs";
+import { Team, User } from "@prisma/client";
 import axios from "axios";
 
-export const addTeamMember = async (
-    userFullName: string,
-    userEmail: string,
-    token: string
-) => {
-    console.log(token);
-    const response = await axios.post(
-        env.NEXT_PUBLIC_APP_URL+"/api/teams",
-        { name: userFullName, email: userEmail },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
+import { env } from "@/env.mjs";
 
-    return response.data;
-}
+import { GetTeamMembersResponse } from "./types";
+
+export const addTeamMember = async (
+  userFullName: string,
+  userEmail: string,
+) => {
+  const response = await axios.post("/api/teams", {
+    name: userFullName,
+    email: userEmail,
+  });
+
+  return response.data;
+};
+
+export const getTeamMembers = async (): Promise<GetTeamMembersResponse> => {
+  const response = await axios.get("/api/teams");
+
+  return response.data;
+};

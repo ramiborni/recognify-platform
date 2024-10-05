@@ -43,7 +43,7 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
       invitationEmail,
       token,
     }: AddTeamMemberMutateProps) =>
-      await addTeamMember(invitationName, invitationEmail, token),
+      await addTeamMember(invitationName, invitationEmail),
     onSuccess: async () => {
       toast({
         variant: "success",

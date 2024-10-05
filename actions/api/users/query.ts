@@ -4,10 +4,10 @@ import { getUser } from ".";
 export const getUserKey = () => ['user']
 
 
-export const useGetUser = (token: string) => {
+export const useGetUser = () => {
     const response = useQuery({
         queryKey: getUserKey(),
-        queryFn: () => getUser(token),
+        queryFn: () => getUser(),
         refetchOnWindowFocus: false,
         retry: 0,
     });

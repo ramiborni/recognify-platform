@@ -1,3 +1,4 @@
+import { AddedRecognition } from "@/emails/added-recognition";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
 import { Recognition } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
@@ -32,26 +33,72 @@ export const POST = async (req: Request, res: Response) => {
     return new Response("User not found", { status: 404 });
   }
 
-  const { receiverId, message, isPublic, badges }: Partial<Recognition> =
-    await req.json();
+  const {
+    receiverId,
+    message,
+    isPublic,
+    badges,
+    points,
+  }: Partial<Recognition> = await req.json();
 
-  if (!receiverId || !message || !isPublic || !badges) {
-    return new Response("Missing data in the request");
+  if (!receiverId || receiverId === "") {
+    return new Response("Missing or invalid 'receiverId'", { status: 400 });
+  }
+
+  if (!message || message === "") {
+    return new Response("Missing or invalid 'message'", { status: 400 });
+  }
+
+  if (typeof isPublic === "undefined") {
+    return new Response("Missing or invalid 'isPublic'", { status: 400 });
+  }
+
+  if (!badges || badges.length <= 0) {
+    return new Response("Missing or invalid 'badges'", { status: 400 });
+  }
+
+  const receiver = await prisma.user.findUnique({
+    where: {
+      id: receiverId,
+    },
+  });
+
+  if (!receiver) {
+    return new Response("Can't find the receiver in the database", {
+      status: 404,
+    });
   }
 
   const recognition = await prisma.recognition.create({
     data: {
       giverId: userId,
       receiverId: receiverId,
-      message: message.trim(),
+      message: message!.trim(),
       isPublic: isPublic,
       badges: badges,
+      points: points!,
+      teamId: user.teamId!
     },
   });
 
+  if (recognition) {
+    const { data, error } = await resend.emails.send({
+      from: "no-reply@recognify.io",
+      to: receiver.email!,
+      subject: "👏 You're Awesome! Someone Just Recognized You!",
+      react: AddedRecognition({
+        receiverFullName: receiver.name!,
+        senderFullName: user.name!,
+        points: points!,
+      }),
+      // Set this to prevent Gmail from threading emails.
+      // More info: https://resend.com/changelog/custom-email-headers
+      headers: {
+        "X-Entity-Ref-ID": new Date().getTime() + "",
+      },
+    });
+    console.log(data);
+  }
+
   return new Response("Recognition has been added", { status: 201 });
 };
-
-export const GET = ( req: Request, res: Response) => {
-    
-}

@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 export const inviteTeamMember = async (userId: string, userEmail: string, userFullName: string) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { Team: true },
+        include: { team: true },
     });
 
     if(!user){
@@ -15,7 +15,7 @@ export const inviteTeamMember = async (userId: string, userEmail: string, userFu
         throw new Error("We apologize, but you do not have the necessary permissions to invite team members.");
     }
 
-    if(!user.Team){
+    if(!user.team){
         throw new Error("We apologize, but you do not have a team to invite members to.");
     }
 
@@ -36,7 +36,7 @@ export const inviteTeamMember = async (userId: string, userEmail: string, userFu
     });
 
     const team = await prisma.team.update({
-        where: { id: user.Team?.id },
+        where: { id: user.team?.id },
         data: {
             teamMembers: {
                 connect: {

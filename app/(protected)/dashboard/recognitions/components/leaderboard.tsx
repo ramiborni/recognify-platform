@@ -5,9 +5,15 @@ import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 
 import UserLeaderBoardItem from "./user-leader-board-item";
+import { getLeaderboard } from "@/actions/leaderboard";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-const Leaderboard = () => {
-  const users = [{}, {}, {}, {}];
+const Leaderboard = async () => {
+
+  const {getUser} = getKindeServerSession();
+  const kindeUser = await getUser();
+  const users = await getLeaderboard(kindeUser.id);
+
   return (
     <div className="my-12">
       <Card className="rounded-lg border animate-in fade-in-100">
@@ -21,8 +27,8 @@ const Leaderboard = () => {
         </CardTitle>
         <CardContent>
           <div className="my-8 flex flex-col gap-y-8">
-            {users.map((user, index) => (
-              <UserLeaderBoardItem index={(index+1)} />
+            {users!.map((user, index) => (
+              <UserLeaderBoardItem user={user} index={(index+1)} />
             ))}
           </div>
         </CardContent>

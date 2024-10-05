@@ -12,7 +12,7 @@ import TeamList from "./components/team-list";
 const TeamPage = async () => {
   const { getAccessTokenRaw } = getKindeServerSession();
   const token = await getAccessTokenRaw();
-  const user = await getUser(token);
+  const user = await getUser();
 
   if (user.role === UserRole.USER) {
     redirect("/404");

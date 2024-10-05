@@ -17,7 +17,7 @@ export const getCurrentUser = cache(async () => {
       id: kindeUser.id,
     },
     include: {
-      Team: true,
+      team: true,
     },
   });
   if (!user) {

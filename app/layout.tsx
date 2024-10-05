@@ -9,10 +9,12 @@ import { ThemeProvider } from "next-themes";
 
 import { cn, constructMetadata } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { Toaster as ToastToaster } from "@/components/ui/toaster";
+
 import { Analytics } from "@/components/analytics";
 import ModalProvider from "@/components/modals/providers";
-import { TailwindIndicator } from "@/components/tailwind-indicator";
 import Providers from "@/components/providers";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -43,8 +45,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Providers>{children}</Providers>
             <Analytics />
             <Toaster richColors closeButton />
-            <Toaster richColors closeButton />
-
+            <ToastToaster/>
             <TailwindIndicator />
           </ThemeProvider>
         </SessionProvider>

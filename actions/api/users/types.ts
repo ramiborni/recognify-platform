@@ -1,5 +1,5 @@
 import { AuthorizedRequest } from "@/types";
 
-export interface AddUserMutationProps extends AuthorizedRequest {
+export interface AddUserMutationProps{
     inviteToken: string
 }

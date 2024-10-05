@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useGetUser } from "@/actions/api/users/query";
 import {
   LogoutLink,
   useKindeBrowserClient,
@@ -20,7 +21,7 @@ import {
 import { UserAvatar } from "@/components/shared/user-avatar";
 
 export function UserAccountNav() {
-  const { user, isLoading } = useKindeBrowserClient();
+  const { data: user, isLoading, refetch } = useGetUser();
 
   const [open, setOpen] = useState(false);
   const closeDrawer = () => {
@@ -28,6 +29,12 @@ export function UserAccountNav() {
   };
 
   const { isMobile } = useMediaQuery();
+
+  useEffect(() => {
+    if(!user || !isLoading){
+      refetch && refetch();
+    }
+  }, [user, isLoading, refetch]);
 
   if (!user)
     return (
@@ -39,10 +46,7 @@ export function UserAccountNav() {
       <Drawer.Root open={open} onClose={closeDrawer}>
         <Drawer.Trigger onClick={() => setOpen(true)}>
           <UserAvatar
-            user={{
-              name: `${user.given_name} ${user.family_name}` || null,
-              image: user.picture || null,
-            }}
+            user={user}
             className="size-9 border"
           />
         </Drawer.Trigger>
@@ -58,8 +62,8 @@ export function UserAccountNav() {
 
             <div className="flex items-center justify-start gap-2 p-2">
               <div className="flex flex-col">
-                {`${user.given_name} ${user.family_name}` && (
-                  <p className="font-medium">{`${user.given_name} ${user.family_name}`}</p>
+                {`${user.name}` && (
+                  <p className="font-medium">{`${user.name}`}</p>
                 )}
                 {user.email && (
                   <p className="w-[200px] truncate text-muted-foreground">
@@ -112,19 +116,14 @@ export function UserAccountNav() {
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
         <UserAvatar
-          user={{
-            name: `${user.given_name} ${user.family_name}` || null,
-            image: user.picture || null,
-          }}
+          user={user}
           className="size-8 border"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            {`${user.given_name} ${user.family_name}` && (
-              <p className="font-medium">{`${user.given_name} ${user.family_name}`}</p>
-            )}
+            {`${user.name}` && <p className="font-medium">{`${user.name}`}</p>}
             {user.email && (
               <p className="w-[200px] truncate text-sm text-muted-foreground">
                 {user?.email}

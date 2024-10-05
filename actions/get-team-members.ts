@@ -13,7 +13,7 @@ export const getTeamMembers = async (userId: string) => {
       id: userId,
     },
     include: {
-      Team: {
+      team: {
         include: {
           teamMembers: true,
           TeamInvitation: true,
@@ -37,7 +37,7 @@ export const getTeamMembers = async (userId: string) => {
     points: number;
   }[] = [];
 
-  user.Team?.TeamInvitation.forEach((invitation) => {
+  user.team?.TeamInvitation.forEach((invitation) => {
     teamMembers.push({
       name: invitation.name,
       email: invitation.email,
@@ -47,7 +47,7 @@ export const getTeamMembers = async (userId: string) => {
     });
   });
 
-  user.Team?.teamMembers.forEach((member) => {
+  user.team?.teamMembers.forEach((member) => {
     teamMembers.push({
       name: member.name!,
       email: member.email!,

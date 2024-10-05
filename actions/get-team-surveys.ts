@@ -5,12 +5,12 @@ import { getCurrentUser } from "@/lib/session";
 
 export async function getTeamSurveys() {
   const user = await getCurrentUser();
-  if (!user || !user?.Team) {
+  if (!user || !user?.teamId) {
     return;
   }
   const surveys = await prisma.survey.findMany({
     where: {
-      teamId: user?.Team!.id,
+      teamId: user?.teamId!,
     },
   });
 

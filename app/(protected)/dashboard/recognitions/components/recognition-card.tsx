@@ -1,13 +1,19 @@
 import React from "react";
+import Image from "next/image";
+import { RecognationBadges, Recognition, User } from "@prisma/client";
 import { ArrowRight, AwardIcon } from "lucide-react";
 
+import { timeAgo } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AvatarCircles from "@/components/ui/avatar-circles";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
 
-const RecognitionCard = () => {
+interface RecognitionCardProps {
+  recognition: Recognition & { receiver: User; giver: User };
+}
+
+const RecognitionCard = ({ recognition }: RecognitionCardProps) => {
   const avatarUrls = [
     "https://avatars.githubusercontent.com/u/16860528",
     "https://avatars.githubusercontent.com/u/20110627",
@@ -15,38 +21,57 @@ const RecognitionCard = () => {
     "https://avatars.githubusercontent.com/u/59228569",
   ];
 
-  const badges = [
+  const badgesData = [
     {
-      id: 1,
+      id: RecognationBadges.STAR_PERFORMER,
       name: "Star Performer",
-      emoji: "⭐",
+      icon: "🌟",
       color: "bg-yellow-100 dark:bg-yellow-400 hover:bg-yellow-100",
     },
     {
-      id: 2,
+      id: RecognationBadges.OUTSTANDING_ACHIEVEMENT,
       name: "Outstanding Achievement",
-      emoji: "🏆",
+      icon: "🏆",
       color: "bg-amber-100 dark:bg-amber-300 hover:bg-amber-100",
     },
     {
-      id: 3,
+      id: RecognationBadges.GREAT_TEAMWORK,
       name: "Great Teamwork",
-      emoji: "🤝",
+      icon: "🤝",
       color: "bg-blue-100 dark:bg-blue-400 hover:bg-blue-100",
     },
     {
-      id: 4,
+      id: RecognationBadges.INNOVATIVE_THINKER,
       name: "Innovative Thinker",
-      emoji: "💡",
+      icon: "💡",
       color: "bg-purple-100 dark:bg-purple-300 hover:bg-purple-100",
     },
     {
-      id: 5,
-      name: "Customer Favorite",
-      emoji: "😍",
+      id: RecognationBadges.CUSTOMER_FAVOURITE,
+      name: "Customer Favourite",
+      icon: "❤️",
       color: "bg-pink-100 dark:bg-pink-300 hover:bg-pink-100",
     },
+    {
+      id: RecognationBadges.LEADER,
+      name: "Leader",
+      icon: "👑",
+      color: "bg-yellow-300 dark:bg-yellow-500 hover:bg-yellow-400",
+    },
   ];
+
+  const RecognitionBadge = ({ badgeId }: { badgeId: string }) => {
+    const badge = badgesData.find((b) => b.id === badgeId);
+
+    return (
+      <Badge
+        key={badge?.id} // Ensure you provide a unique key for each badge
+        className={`flex-none ${badge?.color} text-black`}
+      >
+        {badge?.icon} {badge?.name}
+      </Badge>
+    );
+  };
 
   return (
     <>
@@ -54,42 +79,45 @@ const RecognitionCard = () => {
         <CardTitle className="px-6 py-4">
           <div className="flex flex-row items-center gap-x-3">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage
+                src={recognition.giver.profilePicute!}
+                alt="Profile Picture"
+              />
+              <AvatarFallback>
+                {recognition.giver.name?.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             <Avatar className="bg-primary/20">
               <div className="m-auto flex w-full flex-col items-center text-xs text-primary">
                 <AwardIcon className="size-4" />
-                100
+                {recognition.points}
               </div>
             </Avatar>
             <ArrowRight className="text-primary" />
-            <AvatarCircles numPeople={99} avatarUrls={avatarUrls} />
+            {/*
+              <AvatarCircles numPeople={99} avatarUrls={avatarUrls} />
+              */}
+            <Avatar>
+              <AvatarImage
+                src={recognition.receiver.profilePicute!}
+                alt="Profile Picture"
+              />
+              <AvatarFallback>
+                {recognition.receiver.name?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
           </div>
           <div className="mt-2 text-sm font-normal text-muted-foreground">
-            Before 23 hours
+            {timeAgo(recognition.createdAt)}
           </div>
         </CardTitle>
         <CardContent className="flex flex-col gap-y-4">
-          <div className="text-lg">
-            +100 to John, Wick, and Sam for{" "}
-            <span className="text-primary">#deliveringexcellence</span>, I
-            wanted to reiterate how grateful I am for all the good work and the
-            brainstorming session we had and all of your support so far.
-          </div>
-          <div>
-            <Image width="400" height="400" className="aspect-auto rounded-lg" alt="recognition" src="https://media1.giphy.com/media/zc2wFEM5VXIPfaxqOH/giphy.gif?cid=6c09b9525y4h75nvmsy2rmf9w8qxlg2draqq5pocgsvhcdkm&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g"/>
-          </div>
+          <div className="text-lg">{recognition.message}</div>
         </CardContent>
         <CardFooter>
           <div className="flex flex-wrap justify-start gap-2">
-            {badges.map((badge) => (
-              <Badge
-                key={badge.id} // Ensure you provide a unique key for each badge
-                className={`flex-none ${badge.color} text-black`}
-              >
-                {badge.emoji} {badge.name}
-              </Badge>
+            {recognition.badges.map((badge) => (
+              <RecognitionBadge badgeId={badge} />
             ))}
           </div>
         </CardFooter>
