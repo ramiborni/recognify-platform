@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { addRecognition } from "@/actions/api/recognitions";
 import { RecognationBadges } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
@@ -40,7 +41,6 @@ import { Icons } from "@/components/shared/icons";
 import { AddBadgeSheet } from "./add-badge-sheets";
 import { AddPointsSheet } from "./add-points-sheets";
 import { SelectTeamMemberSheet } from "./select-team-member-sheets";
-import {useRouter} from "next/navigation"
 
 interface AddRecognitionMutateProps {
   recognition: string;
@@ -73,8 +73,13 @@ export default function AddRecognitionDialog() {
         description:
           "Thank you for spreading positivity and recognizing your team! Your recognition has been successfully shared.",
       });
+      setRecognition("");
+      setIsPrivate(false);
+      setSelectedMember(null);
+      setPoints(0);
+      setSelectedBadges([]);
       setIsOpen(false);
-      router.refresh()
+      router.refresh();
     },
     onError(error) {
       toast({

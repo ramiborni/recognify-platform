@@ -24,6 +24,7 @@ import {
   Laptop,
   LayoutPanelLeft,
   LineChart,
+  LinkedinIcon,
   Loader2,
   LucideIcon,
   LucideProps,
@@ -43,6 +44,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import React from "react";
 
 export type Icon = LucideIcon;
 
@@ -272,6 +274,7 @@ export const Icons = {
   copy: Copy,
   dashboard: LayoutPanelLeft,
   ellipsis: MoreVertical,
+  linkedin: LinkedinIcon,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

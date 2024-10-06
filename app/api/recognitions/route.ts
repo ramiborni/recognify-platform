@@ -1,7 +1,7 @@
 import { AddedRecognition } from "@/emails/added-recognition";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
-import { Recognition } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
+import { Recognition } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";

@@ -17,14 +17,14 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  role          UserRole  @default(USER)
-  profilePicute String?
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  createdAt      DateTime  @default(now()) @map(name: "created_at")
+  updatedAt      DateTime  @default(now()) @map(name: "updated_at")
+  role           UserRole  @default(USER)
+  profilePicture String?
 
   stripeCustomerId       String?       @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?       @unique @map(name: "stripe_subscription_id")
@@ -34,9 +34,11 @@ model User {
   recognitionsReceived   Recognition[] @relation("ReceivedRecognitions")
   feedbacks              Feedback[]
 
-  team         Team?   @relation(fields: [teamId], references: [id])
+  team         Team?              @relation(fields: [teamId], references: [id])
   teamId       String?
-  isTeamLeader Boolean @default(false)
+  isTeamLeader Boolean            @default(false)
+
+  assagnedSurveys Survey[]
 }
 
 model Team {
@@ -48,7 +50,7 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Survey Survey[]
+  surveys Survey[]
 
   TeamInvitation TeamInvitation[]
 
@@ -77,7 +79,7 @@ model VerificationToken {
 }
 
 model Recognition {
-  id         String                @id @default(uuid())
+  id         String                @id @default(cuid())
   message    String
   giver      User                  @relation("GivenRecognitions", fields: [giverId], references: [id])
   giverId    String
@@ -110,24 +112,31 @@ enum RecognationBadges {
 }
 
 model Survey {
-  id        String       @id @default(uuid())
-  title     String
-  questions String[] // You can store JSON array of questions
-  responses Feedback[]
-  Team      Team         @relation(fields: [teamId], references: [id])
-  teamId    String
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  status    SurveyStatus @default(PENDING)
+  id          String       @id @default(cuid())
+  title       String
+  description String
+  questions   Json
+  responses   Feedback[]
+  team        Team         @relation(fields: [teamId], references: [id])
+  teamId      String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  status      SurveyStatus @default(PENDING)
+
+  // New relation to track selected members who are part of the survey
+  selectedTeamMembers User[]
 }
 
 model Feedback {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  surveyId  String
-  survey    Survey   @relation(fields: [surveyId], references: [id])
-  response  String
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  surveyId String
+  survey   Survey @relation(fields: [surveyId], references: [id])
+
+  // Storing the answers to survey questions as JSON. Each answer corresponds to a question in Survey.questions.
+  responses Json // Store individual responses for each question in JSON
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

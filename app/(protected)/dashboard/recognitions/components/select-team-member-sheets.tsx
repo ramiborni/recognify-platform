@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 import { useGetTeamMembers } from "@/actions/api/teams/query"
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
 import { Loader2Icon, UserPlus, Check } from "lucide-react"
@@ -31,8 +31,6 @@ export function SelectTeamMemberSheet({
   selectedMember,
   setSelectedMember,
 }: TeamMemberSheetProps) {
-  const { getToken, isAuthenticated } = useKindeBrowserClient()
-
   const {
     data: team,
     isLoading,
@@ -48,6 +46,12 @@ export function SelectTeamMemberSheet({
     )
     return totalPoints
   }
+
+  useEffect(() => {
+    if(!team){
+        refetch();
+    }
+  }, [team, isLoading, error])
 
   return (
     <Sheet>
@@ -87,7 +91,7 @@ export function SelectTeamMemberSheet({
                 onClick={() => setSelectedMember(member.id)}
               >
                 <Avatar className="mr-2 size-8">
-                  <AvatarImage src={member.profilePicute!} alt={member.name!} />
+                  <AvatarImage src={member.profilePicture!} alt={member.name!} />
                   <AvatarFallback>{member.name!.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start">

@@ -8,6 +8,7 @@ import Integrations from "@/components/sections/integrations";
 import Powered from "@/components/sections/powered";
 import PreviewLanding from "@/components/sections/preview-landing";
 import Testimonials from "@/components/sections/testimonials";
+import React from "react";
 
 export default function IndexPage() {
   return (

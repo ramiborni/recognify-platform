@@ -6,12 +6,13 @@ const site_url = env.NEXT_PUBLIC_APP_URL;
 export const siteConfig: SiteConfig = {
   name: "Recognify",
   description:
-    "Get your project off to an explosive start with SaaS Starter! Harness the power of Next.js 14, Prisma, Neon, Auth.js v5, Resend, React Email, Shadcn/ui and Stripe to build your next big thing.",
+  "Recognify helps remote teams feel appreciated with easy-to-use employee recognition and feedback. our platform makes it simple to celebrate achievements and stay connected. With integrations for Slack and Microsoft Teams, Recognify keeps everyone in the loop and boosts team spirit no matter where they work.",
   url: site_url,
   ogImage: `${site_url}/_static/og.jpg`,
   links: {
-    twitter: "https://twitter.com/miickasmt",
-    github: "https://github.com/mickasmt/next-saas-stripe-starter",
+    twitter: "https://twitter.com/recognify",
+    github: "https://github.com/",
+    linkedin: "https://www.linkedin.com/company/recognify/"
   },
   mailSupport: "support@saas-starter.com",
 };

@@ -10,8 +10,6 @@ import AddTeamMemberButton from "./components/add-team-member-button";
 import TeamList from "./components/team-list";
 
 const TeamPage = async () => {
-  const { getAccessTokenRaw } = getKindeServerSession();
-  const token = await getAccessTokenRaw();
   const user = await getUser();
 
   if (user.role === UserRole.USER) {
