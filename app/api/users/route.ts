@@ -1,4 +1,4 @@
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import {
   validateToken,
   type jwtValidationResponse,
@@ -170,3 +170,7 @@ export const DELETE = async (req) => {
 
   return new Response("User deleted successfully!", { status: 200 });
 };
+
+export const OPTIONS = (req,res: NextApiResponse) => {
+  return res.status(200).send('ok');
+}

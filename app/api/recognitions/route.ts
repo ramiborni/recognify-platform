@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
+import { NextApiResponse } from "next";
 
 export const POST = async (req: Request, res: Response) => {
   const token: string = req.headers
@@ -102,3 +103,8 @@ export const POST = async (req: Request, res: Response) => {
 
   return new Response("Recognition has been added", { status: 201 });
 };
+
+
+export const OPTIONS = (req,res: NextApiResponse) => {
+  return res.status(200).send('ok');
+}

@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
+import { NextApiResponse } from "next";
 
 export const POST = async (req, res) => {
   try {
@@ -200,3 +201,8 @@ export const GET = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+export const OPTIONS = (req,res: NextApiResponse) => {
+  return res.status(200).send('ok');
+}
