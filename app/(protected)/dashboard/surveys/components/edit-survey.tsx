@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { editSurvey } from "@/actions/api/surveys";
 import { Question } from "@/actions/api/surveys/types";
-import { addNewSurvey } from "@/actions/api/surveys";
 import { useGetTeamMembers } from "@/actions/api/teams/query";
-import { User } from "@prisma/client";
+import { Survey, User } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import {
   Loader2,
-  Loader2Icon,
   Minus,
   NotepadText,
   Plus,
@@ -43,21 +42,35 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 
-interface AddSurveyMutateProps {
+interface EditSurveyProps {
+  survey: Survey & { selectedTeamMembers: User[] };
+  open: boolean;
+  onOpenChange: (boolean) => void;
+  onSuccess: () => void;
+}
+
+interface EditSurveyMutateProps {
+  id: string;
   title: string;
   description: string;
   questions: Question[];
   selectedTeamMembers: string[];
 }
 
-const AddNewSurvey = () => {
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [questions, setQuestions] = useState<Question[]>([
-    { id: "1", text: "", type: "short-answer" },
-  ]);
-  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
+const EditSurvey: React.FC<EditSurveyProps> = ({
+  survey,
+  open,
+  onOpenChange,
+  onSuccess,
+}) => {
+  const [title, setTitle] = useState(survey.title);
+  const [description, setDescription] = useState(survey.description);
+  const [questions, setQuestions] = useState<Question[]>(
+    survey.questions as unknown as Question[],
+  );
+  const [selectedMembers, setSelectedMembers] = useState<string[]>(
+    survey.selectedTeamMembers.map((member) => member.id),
+  );
 
   const router = useRouter();
   const {
@@ -68,32 +81,21 @@ const AddNewSurvey = () => {
     refetch,
   } = useGetTeamMembers();
 
-  const { isPending, mutate: AddSurveyMutate } = useMutation({
+  const { isPending, mutate: EditSurveyMutate } = useMutation({
     mutationFn: async ({
+      id,
       title,
       description,
       questions,
       selectedTeamMembers,
-    }: AddSurveyMutateProps) =>
-      await addNewSurvey(title, description, questions, selectedTeamMembers),
-    onSuccess() {
-      toast({
-        title: "Survey Added!",
-        description:
-          "Thank you for creating a survey! Your effort to gather feedback helps to spread positivity and recognize the team's contributions.",
-      });
-      setOpen(false);
-      setTitle("");
-      setDescription("");
-      //@ts-ignore
-      setQuestions([{ id: "1", text: "", type: "short-answer" }]);
-      setSelectedMembers([]);
-      router.refresh();
-    },
+    }: EditSurveyMutateProps) =>
+      await editSurvey(id, title, description, questions, selectedTeamMembers),
+    onSuccess,
     onError(error) {
       toast({
-        title: "Something wrong happened",
-        description: "Please try again, or contact rami@recognify.io",
+        title: "Error Updating Survey",
+        description:
+          "An error occurred while updating the survey. Please try again or contact support.",
         variant: "destructive",
       });
     },
@@ -188,7 +190,8 @@ const AddNewSurvey = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    AddSurveyMutate({
+    EditSurveyMutate({
+      id: survey.id,
       title: title,
       description: description,
       questions: questions,
@@ -203,18 +206,18 @@ const AddNewSurvey = () => {
   }, [team, isLoading, error]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button variant="outline">
           <NotepadText className="mr-2" />
-          Create Survey
+          Edit Survey
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create Team Survey</DialogTitle>
+          <DialogTitle>Edit Team Survey</DialogTitle>
           <DialogDescription>
-            Gather feedback from your team with a custom survey.
+            Update your survey details, questions, and team member assignments.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -388,7 +391,7 @@ const AddNewSurvey = () => {
                     </Label>
                   </div>
                 ))}
-                {isLoading && <Loader2Icon className="animate-spin" />}
+                {isLoading && <Loader2 className="animate-spin" />}
               </div>
             </div>
           </ScrollArea>
@@ -396,12 +399,12 @@ const AddNewSurvey = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>
             <Button disabled={isPending} type="submit">
-              {!isPending && <>Create Survey</>}
+              {!isPending && <>Update Survey</>}
               {isPending && <Loader2 className="size-4 animate-spin" />}
             </Button>
           </DialogFooter>
@@ -411,4 +414,4 @@ const AddNewSurvey = () => {
   );
 };
 
-export default AddNewSurvey;
+export default EditSurvey;

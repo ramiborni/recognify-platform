@@ -8,6 +8,7 @@ import { DashboardHeader } from "@/components/dashboard/header";
 
 import AddNewSurvey from "./components/add-new-survey";
 import SurveysGrid from "./components/surveys-grid";
+import NoSurveysCard from "../components/no-surveys";
 
 const SurveysPage = async () => {
   const { getUser } = getKindeServerSession();
@@ -24,7 +25,8 @@ const SurveysPage = async () => {
         {user?.role === UserRole.TEAM_LEADER && <AddNewSurvey />}
       </DashboardHeader>
       <div className="py-6">
-        <SurveysGrid surveys={surveys} />
+        <NoSurveysCard hideCreateSurvey/>
+        <SurveysGrid userRole={user?.role!} surveys={surveys} />
       </div>
     </>
   );

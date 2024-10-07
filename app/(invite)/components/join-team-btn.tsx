@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LoaderIcon } from "lucide-react";
+import { Loader2Icon, LoaderIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -24,7 +24,7 @@ const JoinTeamBtn = ({ token }: JoinTeamBtnProps) => {
 
   return (
     <Button onClick={joinTeam} disabled={loading}>
-      {loading ? <LoaderIcon className="animate-spin" /> : "Join the team!"}
+      {loading ? <Loader2Icon className="animate-spin" /> : "Join the team!"}
     </Button>
   );
 };

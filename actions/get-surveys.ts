@@ -8,11 +8,38 @@ export const getSurveys = async (userId: string) => {
         include: {
             team: {
                 include: {
-                    surveys: true,
+                    surveys: {
+                        include: {
+                            selectedTeamMembers: true,
+                            responses: {
+                                where: {
+                                    userId: userId
+                                }
+                            }
+                        }
+                    },
+                    
                 }
             }
         }
-    }) ;
+    });
 
     return user?.team?.surveys;
+}
+
+export const getSurveyById = async(surveyId: string, userId: string) => {
+    const survey= await prisma.survey.findUnique({
+        where: {
+            id: surveyId
+        },
+        include: {
+            responses: {
+                where: {
+                    userId: userId
+                }
+            }
+        }
+    })
+
+    return survey;
 }

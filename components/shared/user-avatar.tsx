@@ -11,10 +11,10 @@ interface UserAvatarProps extends AvatarProps {
 export function UserAvatar({ user, ...props }: UserAvatarProps) {
   return (
     <Avatar {...props}>
-      {user.profilePicute ? (
+      {user.profilePicture ? (
         <AvatarImage
           alt="Picture"
-          src={user.profilePicute || user.name?.charAt(0)}
+          src={user.profilePicture || user.name?.charAt(0)}
           referrerPolicy="no-referrer"
         />
       ) : (

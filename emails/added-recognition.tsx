@@ -32,7 +32,7 @@ import {
         <Tailwind>
           <Body className="bg-white font-sans">
             <Container className="mx-auto py-5 pb-12">
-              <Text className="font-urban text-4xl font-bold text-primary">
+              <Text className="font-urban text-4xl font-bold text-[#3d61ff]">
                 Recognify
               </Text>
               <Text className="text-base">Hi {receiverFullName},</Text>

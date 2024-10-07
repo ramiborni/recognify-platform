@@ -115,7 +115,7 @@ model Survey {
   id          String       @id @default(cuid())
   title       String
   description String
-  questions   Json
+  questions   Json[]
   responses   Feedback[]
   team        Team         @relation(fields: [teamId], references: [id])
   teamId      String
@@ -135,7 +135,7 @@ model Feedback {
   survey   Survey @relation(fields: [surveyId], references: [id])
 
   // Storing the answers to survey questions as JSON. Each answer corresponds to a question in Survey.questions.
-  responses Json // Store individual responses for each question in JSON
+  responses Json[] // Store individual responses for each question in JSON
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

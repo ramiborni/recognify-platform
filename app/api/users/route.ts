@@ -103,7 +103,7 @@ export const POST = async (req: Request, res) => {
         id: user.id,
         email: user.preferred_email,
         name: user.first_name + " " + user.last_name,
-        profilePicute: user.picture,
+        profilePicture: user.picture,
         role: invitation ? UserRole.USER : UserRole.TEAM_LEADER,
       },
     });

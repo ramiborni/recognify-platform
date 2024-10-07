@@ -80,7 +80,7 @@ const RecognitionCard = ({ recognition }: RecognitionCardProps) => {
           <div className="flex flex-row items-center gap-x-3">
             <Avatar>
               <AvatarImage
-                src={recognition.giver.profilePicute!}
+                src={recognition.giver.profilePicture!}
                 alt="Profile Picture"
               />
               <AvatarFallback>
@@ -99,7 +99,7 @@ const RecognitionCard = ({ recognition }: RecognitionCardProps) => {
               */}
             <Avatar>
               <AvatarImage
-                src={recognition.receiver.profilePicute!}
+                src={recognition.receiver.profilePicture!}
                 alt="Profile Picture"
               />
               <AvatarFallback>

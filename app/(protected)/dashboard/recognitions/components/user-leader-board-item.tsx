@@ -20,7 +20,7 @@ const UserLeaderBoardItem = ({ index, user }: UserLeaderBoardItemProps) => {
         </Avatar>
       </div>
       <Avatar>
-        <AvatarImage src={user.profilePicute!} alt="Porfile Picture" />
+        <AvatarImage src={user.profilePicture!} alt="Porfile Picture" />
         <AvatarFallback>{user.name!.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex flex-1 flex-col gap-y-[0.2px]">

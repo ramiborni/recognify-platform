@@ -30,12 +30,15 @@ export const MagicLinkEmail = ({
   <Html>
     <Head />
     <Preview>
-      Welcome to Recognify! Click the link below to {mailType === "login" ? "sign in to" : "activate"} your account.
+      Welcome to Recognify! Click the link below to{" "}
+      {mailType === "login" ? "sign in to" : "activate"} your account.
     </Preview>
     <Tailwind>
       <Body className="bg-white font-sans">
         <Container className="mx-auto py-5 pb-12">
-          <Icons.logo className="m-auto block size-10" />
+          <Text className="font-urban text-4xl font-bold text-[#3d61ff]">
+            Recognify
+          </Text>{" "}
           <Text className="text-base">Hi {firstName},</Text>
           <Text className="text-base">
             Welcome to {siteName} ! Click the link below to{" "}
@@ -60,14 +63,14 @@ export const MagicLinkEmail = ({
           ) : null}
           <Hr className="my-4 border-t-2 border-gray-300" />
           <Text className="text-sm text-gray-600">
-            71-75 Shelton Street, London, Greater London, United Kingdom, WC2H 9JQ
+            71-75 Shelton Street, London, Greater London, United Kingdom, WC2H
+            9JQ
           </Text>
         </Container>
       </Body>
     </Tailwind>
   </Html>
 );
-
 
 export const InviteMagicLinkEmail = ({
   firstName = "",
@@ -87,7 +90,8 @@ export const InviteMagicLinkEmail = ({
           <Icons.logo className="m-auto block size-10" />
           <Text className="text-base">Hi {firstName},</Text>
           <Text className="text-base">
-            Welcome to {siteName}! You have been invited by {invitedBy} to join a team, Click the link below to{" "}
+            Welcome to {siteName}! You have been invited by {invitedBy} to join
+            a team, Click the link below to{" "}
             {mailType === "login" ? "sign in to" : "activate"} your account.
           </Text>
           <Section className="my-5 text-center">
@@ -109,7 +113,8 @@ export const InviteMagicLinkEmail = ({
           ) : null}
           <Hr className="my-4 border-t-2 border-gray-300" />
           <Text className="text-sm text-gray-600">
-            71-75 Shelton Street, London, Greater London, United Kingdom, WC2H 9JQ
+            71-75 Shelton Street, London, Greater London, United Kingdom, WC2H
+            9JQ
           </Text>
         </Container>
       </Body>
