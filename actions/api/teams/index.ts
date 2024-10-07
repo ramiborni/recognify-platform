@@ -9,7 +9,7 @@ export const addTeamMember = async (
   userFullName: string,
   userEmail: string,
 ) => {
-  const response = await axios.post("/api/teams", {
+  const response = await axios.post('/api/teams/', {
     name: userFullName,
     email: userEmail,
   });
@@ -18,7 +18,7 @@ export const addTeamMember = async (
 };
 
 export const getTeamMembers = async (): Promise<GetTeamMembersResponse> => {
-  const response = await axios.get("/api/teams");
+  const response = await axios.get('/api/teams/');
 
   return response.data;
 };

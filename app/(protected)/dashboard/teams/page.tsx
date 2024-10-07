@@ -1,6 +1,5 @@
 import React from "react";
 import { redirect } from "next/navigation";
-import { getUser } from "@/actions/api/users";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { UserRole } from "@prisma/client";
 
@@ -8,11 +7,14 @@ import { DashboardHeader } from "@/components/dashboard/header";
 
 import AddTeamMemberButton from "./components/add-team-member-button";
 import TeamList from "./components/team-list";
+import { getUserById } from "@/lib/user";
 
 const TeamPage = async () => {
-  const user = await getUser();
+  const { getUser } = getKindeServerSession();
+  const kindeUser = await getUser();
+  const user = await getUserById(kindeUser.id);
 
-  if (user.role === UserRole.USER) {
+  if (user!.role === UserRole.USER) {
     redirect("/404");
   }
 

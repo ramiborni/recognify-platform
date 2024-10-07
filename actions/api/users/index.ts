@@ -12,7 +12,8 @@ export const addUser = async (inviteToken: string) => {
 };
 
 export const getUser = async () => {
-  const response = await axios.get("/api/users");
+  const baseURL = env.NEXT_PUBLIC_APP_URL || ""; // Adjust the environment variable name based on your setup
+  const response = await axios.get(`${baseURL}/api/users`);
 
   return response.data as User;
 };
