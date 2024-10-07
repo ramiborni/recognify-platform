@@ -41,15 +41,14 @@ export const deleteSurvey = async (surveyId: string) => {
   return response.data;
 };
 
-
 export const submitFeedback = async (
   surveyId: string,
-  surveyResponses: Record<string, string>
+  surveyResponses: Record<string, string>,
 ) => {
   const response = await axios.post("/api/surveys/feedback", {
-      surveyId,
-      surveyResponses
+    surveyId,
+    surveyResponses,
   });
 
   return response.data;
-}
+};

@@ -57,7 +57,9 @@ export const getTeamMembers = async (userId: string) => {
     });
   });
 
-  const sortedTeamMembers = teamMembers.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const sortedTeamMembers = teamMembers.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
 
   return sortedTeamMembers;
 };

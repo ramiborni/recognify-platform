@@ -1,6 +1,7 @@
-import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
 const NoRecognitionCard = () => {
   return (

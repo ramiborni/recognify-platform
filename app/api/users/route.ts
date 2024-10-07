@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import {
   validateToken,
   type jwtValidationResponse,
@@ -8,7 +9,6 @@ import { UserRole } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req, res) => {
   const token: string = req.headers.get("Authorization").replace("Bearer ", "");
@@ -172,7 +172,7 @@ export const DELETE = async (req) => {
   return new Response("User deleted successfully!", { status: 200 });
 };
 export const OPTIONS = async (request: NextRequest) => {
-  return new NextResponse('', {
-    status: 200
-  })
-}
+  return new NextResponse("", {
+    status: 200,
+  });
+};

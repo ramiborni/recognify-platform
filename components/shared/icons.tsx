@@ -1,3 +1,4 @@
+import React from "react";
 import Image, { ImageProps } from "next/image";
 import AsanaLogo from "@/public/_static/logos/Asana.png";
 import {
@@ -44,7 +45,6 @@ import {
   Users,
   X,
 } from "lucide-react";
-import React from "react";
 
 export type Icon = LucideIcon;
 

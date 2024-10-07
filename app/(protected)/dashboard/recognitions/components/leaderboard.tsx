@@ -1,16 +1,15 @@
 import React from "react";
+import { getLeaderboard } from "@/actions/leaderboard";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { TrophyIcon } from "lucide-react";
 
 import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 
 import UserLeaderBoardItem from "./user-leader-board-item";
-import { getLeaderboard } from "@/actions/leaderboard";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const Leaderboard = async () => {
-
-  const {getUser} = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
   const kindeUser = await getUser();
   const users = await getLeaderboard(kindeUser.id);
 
@@ -28,7 +27,7 @@ const Leaderboard = async () => {
         <CardContent>
           <div className="my-8 flex flex-col gap-y-8">
             {users!.map((user, index) => (
-              <UserLeaderBoardItem user={user} index={(index+1)} />
+              <UserLeaderBoardItem user={user} index={index + 1} />
             ))}
           </div>
         </CardContent>

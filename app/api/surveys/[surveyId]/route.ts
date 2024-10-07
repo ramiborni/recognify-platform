@@ -1,9 +1,9 @@
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
 import { Survey, SurveyStatus, UserRole } from "@prisma/client";
+import { InputJsonValue } from "@prisma/client/runtime/library";
 import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
-import { InputJsonValue } from "@prisma/client/runtime/library";
 
 export const PATCH = async (
   req: Request,
@@ -77,8 +77,7 @@ export const PATCH = async (
   return new Response("Survey has been updates", {
     status: 200,
   });
-
-}
+};
 
 export const DELETE = async (
   req: Request,

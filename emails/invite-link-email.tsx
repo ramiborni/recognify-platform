@@ -17,13 +17,13 @@ interface InviteLinkEmailProps {
   invitationName: string;
   invitationEmail: string;
   senderName: string;
-  invitationToken: string
+  invitationToken: string;
 }
 export const InviteLinkEmail = ({
   invitationName,
   invitationEmail,
   senderName,
-  invitationToken
+  invitationToken,
 }: InviteLinkEmailProps) => {
   return (
     <Html>

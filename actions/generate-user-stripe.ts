@@ -20,7 +20,7 @@ export async function generateUserStripe(
   let redirectUrl: string = "";
 
   try {
-    const user : any= {};
+    const user: any = {};
 
     if (!user || !user.email || !user.id) {
       throw new Error("Unauthorized");

@@ -1,3 +1,5 @@
+import { NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { InviteLinkEmail } from "@/emails/invite-link-email";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
 import { UserRole } from "@prisma/client";
@@ -5,8 +7,6 @@ import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
-import { NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req, res) => {
   try {
@@ -203,9 +203,8 @@ export const GET = async (req: Request, res: Response) => {
   }
 };
 
-
 export const OPTIONS = async (request: NextRequest) => {
-  return new NextResponse('', {
-    status: 200
-  })
-}
+  return new NextResponse("", {
+    status: 200,
+  });
+};

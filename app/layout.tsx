@@ -10,7 +10,6 @@ import { ThemeProvider } from "next-themes";
 import { cn, constructMetadata } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as ToastToaster } from "@/components/ui/toaster";
-
 import { Analytics } from "@/components/analytics";
 import ModalProvider from "@/components/modals/providers";
 import Providers from "@/components/providers";
@@ -45,7 +44,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Providers>{children}</Providers>
             <Analytics />
             <Toaster richColors closeButton />
-            <ToastToaster/>
+            <ToastToaster />
             <TailwindIndicator />
           </ThemeProvider>
         </SessionProvider>

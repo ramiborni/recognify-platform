@@ -1,11 +1,11 @@
 import React from "react";
-
-import RecognitionCard from "./recognition-card";
 import { getRecognitions } from "@/actions/get-recognitions";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
+import RecognitionCard from "./recognition-card";
+
 const ListRecognitions = async () => {
-  const {getUser} = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
   const kindeUser = await getUser();
   const recognitions = await getRecognitions(kindeUser.id);
   return (

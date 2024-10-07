@@ -1,3 +1,4 @@
+import { FeedbackSubmitted } from "@/emails/feedback-submitted";
 import { InviteSurvey } from "@/emails/invite-survey";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
 import { Survey, SurveyStatus, UserRole } from "@prisma/client";
@@ -6,7 +7,6 @@ import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
-import { FeedbackSubmitted } from "@/emails/feedback-submitted";
 
 export const POST = async (req, res) => {
   const token: string = req.headers
@@ -108,11 +108,9 @@ export const POST = async (req, res) => {
     where: {
       teamId: survey.teamId,
       isTeamLeader: true,
-      role: UserRole.TEAM_LEADER
-    }
-  }))!
-
-  
+      role: UserRole.TEAM_LEADER,
+    },
+  }))!;
 
   const { data, error } = await resend.emails.send({
     from: "no-reply@recognify.io",
@@ -122,7 +120,7 @@ export const POST = async (req, res) => {
       surveyCreatorName: teamLeader.name!,
       respondentName: user.name!,
       surveyName: survey.title,
-      surveyId: survey.id
+      surveyId: survey.id,
     }),
     headers: {
       "X-Entity-Ref-ID": new Date().getTime() + "",
@@ -133,4 +131,3 @@ export const POST = async (req, res) => {
     status: 201,
   });
 };
-

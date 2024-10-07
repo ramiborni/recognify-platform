@@ -5,15 +5,18 @@ import { UserRole } from "@prisma/client";
 
 import { getUserById } from "@/lib/user";
 import { DashboardHeader } from "@/components/dashboard/header";
+
 import ReviewResponses from "../../components/review-responses";
 
-
-const ReviewResponseSurvey = async ({ params }: { params: { surveyId: string } }) => {
+const ReviewResponseSurvey = async ({
+  params,
+}: {
+  params: { surveyId: string };
+}) => {
   const { getUser } = getKindeServerSession();
   const kindeUser = await getUser();
   const user = await getUserById(kindeUser.id);
   const survey = (await getSurveyById(params.surveyId, kindeUser.id))!;
-
 
   return (
     <>

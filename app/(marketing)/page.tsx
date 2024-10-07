@@ -1,3 +1,5 @@
+import React from "react";
+
 import { infos } from "@/config/landing";
 import { PricingCards } from "@/components/pricing/pricing-cards";
 import { PricingFaq } from "@/components/pricing/pricing-faq";
@@ -8,7 +10,6 @@ import Integrations from "@/components/sections/integrations";
 import Powered from "@/components/sections/powered";
 import PreviewLanding from "@/components/sections/preview-landing";
 import Testimonials from "@/components/sections/testimonials";
-import React from "react";
 
 export default function IndexPage() {
   return (

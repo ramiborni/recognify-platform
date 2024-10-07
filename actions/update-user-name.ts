@@ -11,7 +11,6 @@ export type FormData = {
 
 export async function updateUserName(userId: string, data: FormData) {
   try {
-
     const { name } = userNameSchema.parse(data);
 
     // Update the user name.

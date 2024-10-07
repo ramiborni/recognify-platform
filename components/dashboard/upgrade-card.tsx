@@ -1,3 +1,5 @@
+import { HeartIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { HeartIcon } from "lucide-react";
 
 export function UpgradeCard() {
   return (

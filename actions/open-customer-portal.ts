@@ -18,7 +18,6 @@ export async function openCustomerPortal(
   let redirectUrl: string = "";
 
   try {
-
     if (userStripeId) {
       const stripeSession = await stripe.billingPortal.sessions.create({
         customer: userStripeId,

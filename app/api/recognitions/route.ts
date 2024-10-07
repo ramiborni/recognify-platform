@@ -1,12 +1,12 @@
+import { NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { AddedRecognition } from "@/emails/added-recognition";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
-import { jwtDecode } from "jwt-decode";
 import { Recognition } from "@prisma/client";
+import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
-import { NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: Request, res: Response) => {
   const token: string = req.headers
@@ -79,7 +79,7 @@ export const POST = async (req: Request, res: Response) => {
       isPublic: isPublic,
       badges: badges,
       points: points!,
-      teamId: user.teamId!
+      teamId: user.teamId!,
     },
   });
 
@@ -105,9 +105,8 @@ export const POST = async (req: Request, res: Response) => {
   return new Response("Recognition has been added", { status: 201 });
 };
 
-
 export const OPTIONS = async (request: NextRequest) => {
-  return new NextResponse('', {
-    status: 200
-  })
-}
+  return new NextResponse("", {
+    status: 200,
+  });
+};

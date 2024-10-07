@@ -1,36 +1,48 @@
-import React from "react"
-import { AwardIcon } from "lucide-react"
+import React from "react";
+import { RecognationBadges } from "@prisma/client";
+import { AwardIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { RecognationBadges } from "@prisma/client"
+} from "@/components/ui/tooltip";
 
 const badges = [
   { id: RecognationBadges.STAR_PERFORMER, name: "Star Performer", icon: "🌟" },
-  { id: RecognationBadges.OUTSTANDING_ACHIEVEMENT, name: "Outstanding Achievement", icon: "🏆" },
+  {
+    id: RecognationBadges.OUTSTANDING_ACHIEVEMENT,
+    name: "Outstanding Achievement",
+    icon: "🏆",
+  },
   { id: RecognationBadges.GREAT_TEAMWORK, name: "Great Teamwork", icon: "🤝" },
-  { id: RecognationBadges.INNOVATIVE_THINKER, name: "Innovative Thinker", icon: "💡" },
-  { id: RecognationBadges.CUSTOMER_FAVOURITE, name: "Customer Favourite", icon: "❤️" },
+  {
+    id: RecognationBadges.INNOVATIVE_THINKER,
+    name: "Innovative Thinker",
+    icon: "💡",
+  },
+  {
+    id: RecognationBadges.CUSTOMER_FAVOURITE,
+    name: "Customer Favourite",
+    icon: "❤️",
+  },
   { id: RecognationBadges.LEADER, name: "Leader", icon: "👑" },
-]
+];
 
 interface BadgeSheetProps {
-  selectedBadges: RecognationBadges[]
-  setSelectedBadges: (badges: RecognationBadges[]) => void
+  selectedBadges: RecognationBadges[];
+  setSelectedBadges: (badges: RecognationBadges[]) => void;
 }
 
 export function AddBadgeSheet({
@@ -39,11 +51,11 @@ export function AddBadgeSheet({
 }: BadgeSheetProps) {
   const toggleBadge = (badgeId: RecognationBadges) => {
     if (selectedBadges.includes(badgeId)) {
-      setSelectedBadges(selectedBadges.filter(id => id !== badgeId))
+      setSelectedBadges(selectedBadges.filter((id) => id !== badgeId));
     } else {
-      setSelectedBadges([...selectedBadges, badgeId])
+      setSelectedBadges([...selectedBadges, badgeId]);
     }
-  }
+  };
 
   return (
     <Sheet>
@@ -73,7 +85,9 @@ export function AddBadgeSheet({
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Select Badges</SheetTitle>
-          <SheetDescription>Choose one or more badges to award</SheetDescription>
+          <SheetDescription>
+            Choose one or more badges to award
+          </SheetDescription>
         </SheetHeader>
         <div className="mt-4 space-y-4">
           {badges.map((badge) => (
@@ -81,7 +95,9 @@ export function AddBadgeSheet({
               key={badge.id}
               variant="outline"
               className={`w-full justify-start ${
-                selectedBadges.includes(badge.id) ? "border-primary bg-primary/10" : ""
+                selectedBadges.includes(badge.id)
+                  ? "border-primary bg-primary/10"
+                  : ""
               }`}
               onClick={() => toggleBadge(badge.id)}
             >
@@ -102,12 +118,10 @@ export function AddBadgeSheet({
             Clear All
           </Button>
           <SheetClose asChild>
-            <Button>
-              Confirm ({selectedBadges.length})
-            </Button>
+            <Button>Confirm ({selectedBadges.length})</Button>
           </SheetClose>
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

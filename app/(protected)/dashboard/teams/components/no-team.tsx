@@ -6,7 +6,8 @@ const NoTeam = () => {
       <EmptyPlaceholder.Icon name="team" />
       <EmptyPlaceholder.Title>No Team members</EmptyPlaceholder.Title>
       <EmptyPlaceholder.Description>
-        Invite your team by clicking in the button above and share recognition and surveys with your team.
+        Invite your team by clicking in the button above and share recognition
+        and surveys with your team.
       </EmptyPlaceholder.Description>
     </EmptyPlaceholder>
   );

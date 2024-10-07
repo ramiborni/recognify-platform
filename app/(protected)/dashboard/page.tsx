@@ -7,8 +7,8 @@ import { DashboardHeader } from "@/components/dashboard/header";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
 import FirstThingsToDo from "./components/first-things-to-do";
-import NoSurveysCard from "./components/no-surveys";
 import NoRecognitionCard from "./components/no-recognition-card";
+import NoSurveysCard from "./components/no-surveys";
 
 export const metadata = constructMetadata({
   title: "Dashboard – SaaS Starter",

@@ -56,7 +56,7 @@ const TeamList = async () => {
               <TableCell className="text-left">{member.email}</TableCell>
               <TableCell className="text-left">
                 <div className="flex flex-row items-center text-lg font-bold text-primary">
-                  <AwardIcon className="size-6 px-0 text-primary"/>
+                  <AwardIcon className="size-6 px-0 text-primary" />
                   {member.points}
                 </div>
               </TableCell>

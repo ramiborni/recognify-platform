@@ -39,9 +39,9 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
       <div className="border-t py-4">
         <div className="container flex max-w-6xl items-center justify-between">
           <span className="text-sm text-muted-foreground">
-            Copyright &copy; 2024. All rights reserved to Recognify and Vendonet LTD.
-          </span> 
-          
+            Copyright &copy; 2024. All rights reserved to Recognify and Vendonet
+            LTD.
+          </span>
 
           <div className="flex items-center gap-3">
             <Link

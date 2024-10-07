@@ -12,9 +12,6 @@ export type FormData = {
 
 export async function updateUserRole(userId: string, data: FormData) {
   try {
-
-
-
     const { role } = userRoleSchema.parse(data);
 
     // Update the user role.

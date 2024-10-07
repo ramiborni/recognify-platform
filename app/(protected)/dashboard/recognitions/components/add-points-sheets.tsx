@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import React from "react"
-import { BadgePlus, Minus, Plus, Check } from "lucide-react"
+import React from "react";
+import { BadgePlus, Check, Minus, Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -12,17 +12,17 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 interface PointsSheetProps {
-  points: number
-  setPoints: (points: number) => void
+  points: number;
+  setPoints: (points: number) => void;
 }
 
 export function AddPointsSheet({ points, setPoints }: PointsSheetProps) {
@@ -82,5 +82,5 @@ export function AddPointsSheet({ points, setPoints }: PointsSheetProps) {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

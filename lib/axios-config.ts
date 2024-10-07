@@ -1,13 +1,11 @@
-import { env } from "@/env.mjs";
 import axios from "axios";
-import axiosRetry from 'axios-retry';
+import axiosRetry from "axios-retry";
+
+import { env } from "@/env.mjs";
 
 export const axiosConfig = (accessToken: string) => {
-
-
   console.log(accessToken);
-  
-  
+
   // Set the base URL and headers for all requests
   axios.defaults.baseURL = env.NEXT_PUBLIC_APP_URL;
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
@@ -25,7 +23,10 @@ export const axiosConfig = (accessToken: string) => {
     // This function determines if a retry should be made
     // Here it's configured to retry on network errors or 5xx errors on an idempotent request
     retryCondition: (error) => {
-      return axiosRetry.isNetworkOrIdempotentRequestError(error) || error?.response?.status === 429;
-    }
+      return (
+        axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+        error?.response?.status === 429
+      );
+    },
   });
 };

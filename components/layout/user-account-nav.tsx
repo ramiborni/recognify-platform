@@ -31,7 +31,7 @@ export function UserAccountNav() {
   const { isMobile } = useMediaQuery();
 
   useEffect(() => {
-    if(!user || !isLoading){
+    if (!user || !isLoading) {
       refetch && refetch();
     }
   }, [user, isLoading, refetch]);
@@ -45,10 +45,7 @@ export function UserAccountNav() {
     return (
       <Drawer.Root open={open} onClose={closeDrawer}>
         <Drawer.Trigger onClick={() => setOpen(true)}>
-          <UserAvatar
-            user={user}
-            className="size-9 border"
-          />
+          <UserAvatar user={user} className="size-9 border" />
         </Drawer.Trigger>
         <Drawer.Portal>
           <Drawer.Overlay
@@ -115,10 +112,7 @@ export function UserAccountNav() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
-        <UserAvatar
-          user={user}
-          className="size-8 border"
-        />
+        <UserAvatar user={user} className="size-8 border" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">

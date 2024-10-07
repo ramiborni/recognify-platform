@@ -22,7 +22,7 @@ export const getRecognitions = async (userId: string) => {
       createdAt: "desc", // Sort by createdAt in descending order (newer to older)
     },
   });
-  
+
   return recognitions.filter((recognition) => {
     if (!recognition.isPublic && recognition.receiverId === userId) {
       return recognition;

@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { sidebarLinks } from "@/config/dashboard";
+import { axiosConfig } from "@/lib/axios-config";
 import { getCurrentUser } from "@/lib/session";
 import { Toaster } from "@/components/ui/toaster";
 import { SearchCommand } from "@/components/dashboard/search-command";
@@ -10,24 +12,20 @@ import {
 } from "@/components/layout/dashboard-sidebar";
 import { ModeToggle } from "@/components/layout/mode-toggle";
 import { UserAccountNav } from "@/components/layout/user-account-nav";
+import { Icons } from "@/components/shared/icons";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 import OrgModel from "./dashboard/components/org-model";
-import { Icons } from "@/components/shared/icons";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { axiosConfig } from "@/lib/axios-config";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
 }
 
 export default async function Dashboard({ children }: ProtectedLayoutProps) {
-
-  const {getAccessTokenRaw} = await getKindeServerSession();
+  const { getAccessTokenRaw } = await getKindeServerSession();
   axiosConfig(await getAccessTokenRaw());
 
   const user = await getCurrentUser();
-
 
   const filteredLinks = sidebarLinks.map((section) => ({
     ...section,
@@ -37,7 +35,6 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
   }));
 
   const orgModelRendered = true;
-
 
   return (
     <Suspense

@@ -2,9 +2,10 @@ import { redirect, useSearchParams } from "next/navigation";
 import { getInvitation } from "@/actions/get-invitation";
 
 import { siteConfig } from "@/config/site";
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
-import { Button } from "@/components/ui/button";
+
 import JoinTeamBtn from "../../components/join-team-btn";
 
 const InvitationLandingPage = async ({
@@ -12,14 +13,11 @@ const InvitationLandingPage = async ({
 }: {
   params: { invitationToken: string };
 }) => {
-  
   if (!invitationToken) {
     redirect("/404");
   }
 
   const invitationData = await getInvitation(invitationToken!);
-
-
 
   return (
     <MaxWidthWrapper

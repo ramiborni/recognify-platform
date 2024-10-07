@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import React, { useEffect } from "react"
-import { useGetTeamMembers } from "@/actions/api/teams/query"
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
-import { Loader2Icon, UserPlus, Check } from "lucide-react"
+import React, { useEffect } from "react";
+import { useGetTeamMembers } from "@/actions/api/teams/query";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { Check, Loader2Icon, UserPlus } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -14,17 +14,17 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 interface TeamMemberSheetProps {
-  selectedMember: string | null
-  setSelectedMember: (id: string) => void
+  selectedMember: string | null;
+  setSelectedMember: (id: string) => void;
 }
 
 export function SelectTeamMemberSheet({
@@ -37,21 +37,21 @@ export function SelectTeamMemberSheet({
     isError,
     error,
     refetch,
-  } = useGetTeamMembers()
+  } = useGetTeamMembers();
 
   const calculateTotalPoints = (recognitions: { points: number }[]) => {
     let totalPoints = recognitions.reduce(
       (sum, recognition) => sum + recognition.points,
       0,
-    )
-    return totalPoints
-  }
+    );
+    return totalPoints;
+  };
 
   useEffect(() => {
-    if(!team){
-        refetch();
+    if (!team) {
+      refetch();
     }
-  }, [team, isLoading, error])
+  }, [team, isLoading, error]);
 
   return (
     <Sheet>
@@ -59,7 +59,11 @@ export function SelectTeamMemberSheet({
         <Tooltip>
           <TooltipTrigger asChild>
             <SheetTrigger asChild>
-              <Button size="icon" aria-label="Add team member" className="relative bg-primary/90">
+              <Button
+                size="icon"
+                aria-label="Add team member"
+                className="relative bg-primary/90"
+              >
                 <UserPlus className="size-4" />
                 {selectedMember && (
                   <span className="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
@@ -91,7 +95,10 @@ export function SelectTeamMemberSheet({
                 onClick={() => setSelectedMember(member.id)}
               >
                 <Avatar className="mr-2 size-8">
-                  <AvatarImage src={member.profilePicture!} alt={member.name!} />
+                  <AvatarImage
+                    src={member.profilePicture!}
+                    alt={member.name!}
+                  />
                   <AvatarFallback>{member.name!.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start">
@@ -112,5 +119,5 @@ export function SelectTeamMemberSheet({
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
