@@ -1,7 +1,9 @@
 import "@/styles/globals.css";
 
 import React, { useState } from "react";
+import Script from "next/script";
 import { fontGeist, fontHeading, fontSans, fontUrban } from "@/assets/fonts";
+import { User } from "@prisma/client";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 
@@ -10,11 +12,9 @@ import { cn, constructMetadata } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as ToastToaster } from "@/components/ui/toaster";
 import { Analytics } from "@/components/analytics";
+import IntercomWidget from "@/components/intercom-widget";
 import Providers from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
-import IntercomWidget from "@/components/intercom-widget";
-import { User } from "next-auth";
-import Script from "next/script";
 
 interface RootLayoutProps {
   children: React.ReactNode;
