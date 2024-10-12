@@ -25,10 +25,6 @@ export default function IntercomWidget({ user }: IntercomWidgetProps) {
         app_id: "jievhfpn",
       };
     }
-    initIntercomWindow({
-      appId: "jievhfpn",
-      api_base: "https://api-iam.intercom.io",
-    });
   }, [user]);
   return <></>;
 }
