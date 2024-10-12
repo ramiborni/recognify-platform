@@ -32,9 +32,9 @@ model User {
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 
   // LTD Data
-  isLTD                  Boolean   @default(false)
-  isLTDStart             DateTime?
-  ltdPlan                String?
+  isLTD      Boolean   @default(false)
+  isLTDStart DateTime?
+  ltdPlan    String?
 
   recognitionsGiven    Recognition[] @relation("GivenRecognitions")
   recognitionsReceived Recognition[] @relation("ReceivedRecognitions")
@@ -45,6 +45,8 @@ model User {
   isTeamLeader Boolean @default(false)
 
   assagnedSurveys Survey[]
+
+  claps Clap[]
 }
 
 model Team {
@@ -85,27 +87,33 @@ model VerificationToken {
 }
 
 model Recognition {
-  id         String                @id @default(cuid())
+  id         String              @id @default(cuid())
   message    String
-  giver      User                  @relation("GivenRecognitions", fields: [giverId], references: [id])
+  giver      User                @relation("GivenRecognitions", fields: [giverId], references: [id])
   giverId    String
-  receiver   User                  @relation("ReceivedRecognitions", fields: [receiverId], references: [id])
+  receiver   User                @relation("ReceivedRecognitions", fields: [receiverId], references: [id])
   receiverId String
-  isPublic   Boolean               @default(false)
+  isPublic   Boolean             @default(false)
   points     Int
-  reactions  RecognationReaction[]
   badges     RecognationBadges[]
-  team       Team                  @relation(fields: [teamId], references: [id])
+  team       Team                @relation(fields: [teamId], references: [id])
   teamId     String
-  createdAt  DateTime              @default(now())
-  updatedAt  DateTime              @updatedAt
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  claps Clap[]
 }
 
-enum RecognationReaction {
-  LIKE
-  LOVE
-  CLAP
-  WOW
+model Clap {
+  id            String   @id @default(cuid())
+  userId        String
+  recognitionId String
+  createdAt     DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id])
+  recognition Recognition @relation(fields: [recognitionId], references: [id])
+
+  @@unique([userId, recognitionId])
 }
 
 enum RecognationBadges {

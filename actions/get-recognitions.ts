@@ -17,6 +17,7 @@ export const getRecognitions = async (userId: string) => {
     include: {
       receiver: true,
       giver: true,
+      claps: true
     },
     orderBy: {
       createdAt: "desc",

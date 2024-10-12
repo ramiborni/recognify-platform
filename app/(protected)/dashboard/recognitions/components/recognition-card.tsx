@@ -1,25 +1,61 @@
-import React from "react";
-import Image from "next/image";
-import { RecognationBadges, Recognition, User } from "@prisma/client";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { recordClap, removeClap } from "@/actions/api/recognitions";
+import { Clap, RecognationBadges, Recognition, User } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, AwardIcon } from "lucide-react";
 
 import { timeAgo } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import AvatarCircles from "@/components/ui/avatar-circles";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
+import { Icons } from "@/components/shared/icons";
 
 interface RecognitionCardProps {
-  recognition: Recognition & { receiver: User; giver: User };
+  recognition: Recognition & { receiver: User; giver: User; claps: Clap[] };
+  currentUserId: string;
 }
 
-const RecognitionCard = ({ recognition }: RecognitionCardProps) => {
-  const avatarUrls = [
-    "https://avatars.githubusercontent.com/u/16860528",
-    "https://avatars.githubusercontent.com/u/20110627",
-    "https://avatars.githubusercontent.com/u/106103625",
-    "https://avatars.githubusercontent.com/u/59228569",
-  ];
+const RecognitionCard = ({ recognition, currentUserId }: RecognitionCardProps) => {
+  const [claps, setClaps] = useState(recognition.claps.length);
+  const [hasClapped, setHasClapped] = useState(recognition.claps.some(clap => clap.userId === currentUserId));
+  const [isAnimating, setIsAnimating] = useState(false);
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const clapMutation = useMutation({
+    mutationFn: async () => {
+      if (hasClapped) {
+        await removeClap(recognition.id);
+      } else {
+        await recordClap(recognition.id);
+      }
+    },
+    onMutate: () => {
+      // Optimistically update the UI
+      setClaps((prevClaps) => (hasClapped ? prevClaps - 1 : prevClaps + 1));
+      if (!hasClapped) {
+        setIsAnimating(true);
+      }
+    },
+    onSuccess: () => {
+      // Update the hasClapped state only after successful API call
+      setHasClapped((prev) => !prev);
+      router.refresh();
+    },
+    onError: (error) => {
+      // Revert optimistic update
+      setClaps((prevClaps) => (hasClapped ? prevClaps + 1 : prevClaps - 1));
+      toast({
+        title: "Error",
+        description: "Failed to update clap. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const badgesData = [
     {
@@ -64,14 +100,24 @@ const RecognitionCard = ({ recognition }: RecognitionCardProps) => {
     const badge = badgesData.find((b) => b.id === badgeId);
 
     return (
-      <Badge
-        key={badge?.id} // Ensure you provide a unique key for each badge
-        className={`flex-none ${badge?.color} text-black`}
-      >
+      <Badge key={badge?.id} className={`flex-none ${badge?.color} text-black`}>
         {badge?.icon} {badge?.name}
       </Badge>
     );
   };
+
+  const handleClap = () => {
+    clapMutation.mutate();
+  };
+
+  useEffect(() => {
+    if (isAnimating) {
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAnimating]);
 
   return (
     <>
@@ -94,9 +140,6 @@ const RecognitionCard = ({ recognition }: RecognitionCardProps) => {
               </div>
             </Avatar>
             <ArrowRight className="text-primary" />
-            {/*
-              <AvatarCircles numPeople={99} avatarUrls={avatarUrls} />
-              */}
             <Avatar>
               <AvatarImage
                 src={recognition.receiver.profilePicture!}
@@ -114,11 +157,39 @@ const RecognitionCard = ({ recognition }: RecognitionCardProps) => {
         <CardContent className="flex flex-col gap-y-4">
           <div className="text-lg">{recognition.message}</div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col items-start gap-4">
           <div className="flex flex-wrap justify-start gap-2">
             {recognition.badges.map((badge) => (
-              <RecognitionBadge badgeId={badge} />
+              <RecognitionBadge key={badge} badgeId={badge} />
             ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleClap}
+              disabled={clapMutation.isPending}
+              className={`group flex items-center gap-1 text-sm font-medium transition-colors ${
+                hasClapped
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-primary"
+              }`}
+              aria-label={`${hasClapped ? "Remove clap" : "Clap"} for recognition (${claps} claps)`}
+            >
+              <span className="relative inline-flex overflow-hidden rounded-full">
+                <Icons.clap
+                  className={`size-5 transition-transform ${
+                    hasClapped
+                      ? "scale-100 fill-current"
+                      : "scale-90 group-hover:scale-100"
+                  }`}
+                />
+                {isAnimating && (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <Icons.clap className="size-5 animate-ping opacity-75" />
+                  </span>
+                )}
+              </span>
+              <span>{claps}</span>
+            </button>
           </div>
         </CardFooter>
       </Card>
