@@ -19,7 +19,6 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.1",
     "@hookform/resolvers": "^3.9.0",
-    "@intercom/messenger-js-sdk": "^0.0.14",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.8",
     "@kinde/jwt-validator": "^0.3.0",
     "@kinde/management-api-js": "^0.9.0",

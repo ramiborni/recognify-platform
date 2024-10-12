@@ -2,8 +2,6 @@ import "@/styles/globals.css";
 
 import React, { useState } from "react";
 import { fontGeist, fontHeading, fontSans, fontUrban } from "@/assets/fonts";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 
@@ -12,10 +10,11 @@ import { cn, constructMetadata } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as ToastToaster } from "@/components/ui/toaster";
 import { Analytics } from "@/components/analytics";
-import ModalProvider from "@/components/modals/providers";
 import Providers from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
-import Intercom from '@intercom/messenger-js-sdk';
+import IntercomWidget from "@/components/intercom-widget";
+import { User } from "next-auth";
+import Script from "next/script";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -25,20 +24,6 @@ export const metadata = constructMetadata();
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const user = await getCurrentUser();
-
-  if (user) {
-    Intercom({
-      app_id: "jievhfpn",
-      user_id: user.id, // IMPORTANT: Replace "user.id" with the variable you use to capture the user's ID
-      name: user.name!, // IMPORTANT: Replace "user.name" with the variable you use to capture the user's name
-      email: user.email!, // IMPORTANT: Replace "user.email" with the variable you use to capture the user's email
-      created_at: user.createdAt.getTime(), // IMPORTANT: Replace "user.createdAt" with the variable you use to capture the user's sign-up date in a Unix timestamp (in seconds) e.g. 1704067200
-    });
-  }else{
-    Intercom({
-      app_id: "jievhfpn", 
-    });
-  }
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -52,7 +37,51 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           fontGeist.variable,
         )}
       >
+        {/* Intercom Script */}
+        <Script
+          id="intercom-init"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                var w=window;
+                var ic=w.Intercom;
+                if(typeof ic==="function"){
+                  ic('reattach_activator');
+                  ic('update',w.intercomSettings);
+                } else {
+                  var d=document;
+                  var i=function(){
+                    i.c(arguments);
+                  };
+                  i.q=[];
+                  i.c=function(args){
+                    i.q.push(args);
+                  };
+                  w.Intercom=i;
+                  var l=function(){
+                    var s=d.createElement('script');
+                    s.type='text/javascript';
+                    s.async=true;
+                    s.src='https://widget.intercom.io/widget/jievhfpn';
+                    var x=d.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s,x);
+                  };
+                  if(document.readyState==='complete'){
+                    l();
+                  } else if(w.attachEvent){
+                    w.attachEvent('onload',l);
+                  } else {
+                    w.addEventListener('load',l,false);
+                  }
+                }
+              })();
+            `,
+          }}
+        />
+
         <SessionProvider>
+          <IntercomWidget user={user as User} />
           <ThemeProvider
             attribute="class"
             defaultTheme="light"
