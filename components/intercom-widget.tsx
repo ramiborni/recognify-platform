@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { User } from "@prisma/client";
-import { initIntercomWindow, loadIntercom } from "next-intercom";
 
 interface IntercomWidgetProps {
   user?: User;
