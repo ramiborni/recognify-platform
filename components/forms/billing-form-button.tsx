@@ -6,45 +6,45 @@ import { SubscriptionPlan, UserSubscriptionPlan } from "@/types";
 
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/shared/icons";
+import { Zap } from "lucide-react";
 
 interface BillingFormButtonProps {
-  offer: SubscriptionPlan;
-  subscriptionPlan: UserSubscriptionPlan;
-  year: boolean;
+  stripeId: string;
+  isPopular?: boolean;
 }
 
 export function BillingFormButton({
-  year,
-  offer,
-  subscriptionPlan,
+  stripeId,
+  isPopular = false,
 }: BillingFormButtonProps) {
   let [isPending, startTransition] = useTransition();
-  const generateUserStripeSession = generateUserStripe.bind(
-    null,
-    offer.stripeIds[year ? "yearly" : "monthly"],
-  );
+  const generateUserStripeSession = generateUserStripe.bind(null, stripeId);
 
   const stripeSessionAction = () =>
     startTransition(async () => await generateUserStripeSession());
 
-  const userOffer =
-    subscriptionPlan.stripePriceId ===
-    offer.stripeIds[year ? "yearly" : "monthly"];
-
   return (
     <Button
-      variant={userOffer ? "default" : "outline"}
-      rounded="full"
-      className="w-full"
+      className="w-full text-lg font-semibold"
+      size="lg"
       disabled={isPending}
       onClick={stripeSessionAction}
     >
       {isPending ? (
         <>
-          <Icons.spinner className="mr-2 size-4 animate-spin" /> Loading...
+          <Icons.spinner className="mr-2 size-4 animate-spin" />
         </>
       ) : (
-        <>{userOffer ? "Manage Subscription" : "Upgrade"}</>
+        <>
+          {isPopular ? (
+            <>
+              <Zap className="mr-2 size-5" />
+              Get Started Now
+            </>
+          ) : (
+            "Choose Plan"
+          )}
+        </>
       )}
     </Button>
   );

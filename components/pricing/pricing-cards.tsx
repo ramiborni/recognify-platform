@@ -112,11 +112,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                 Go to dashboard
               </Link>
             ) : (
-              <BillingFormButton
-                year={isYearly}
-                offer={offer}
-                subscriptionPlan={subscriptionPlan}
-              />
+              <></>
             )
           ) : (
             <Button

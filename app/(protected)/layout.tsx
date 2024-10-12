@@ -15,6 +15,7 @@ import { UserAccountNav } from "@/components/layout/user-account-nav";
 import { Icons } from "@/components/shared/icons";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
+import Plans from "./components/Plans";
 import OrgModel from "./dashboard/components/org-model";
 
 interface ProtectedLayoutProps {
@@ -35,6 +36,15 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
   }));
 
   const orgModelRendered = true;
+
+  if (
+    !user?.isLTD &&
+    !user?.stripeSubscriptionId &&
+    !user?.stripePriceId &&
+    !user?.stripeCustomerId
+  ) {
+    return <Plans></Plans>;
+  }
 
   return (
     <Suspense

@@ -2,9 +2,11 @@
 
 import { redirect } from "next/navigation";
 
+import { getCurrentUser } from "@/lib/session";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
+import { env } from "@/env.mjs";
 
 export type responseAction = {
   status: "success" | "error";
@@ -15,12 +17,12 @@ export type responseAction = {
 const billingUrl = absoluteUrl("/pricing");
 
 export async function generateUserStripe(
-  priceId: string,
+  productId: string,
 ): Promise<responseAction> {
   let redirectUrl: string = "";
 
   try {
-    const user: any = {};
+    const user = await getCurrentUser();
 
     if (!user || !user.email || !user.id) {
       throw new Error("Unauthorized");
@@ -37,28 +39,38 @@ export async function generateUserStripe(
 
       redirectUrl = stripeSession.url as string;
     } else {
+      const product =  await stripe.products.retrieve(productId);
+
+      const metadata = {
+        userId: user.id,
+        allowedUsers: product.metadata.allowedUsers,
+        planName: product.metadata.allowedUsers,
+      };
+
       // User on Free Plan - Create a checkout session to upgrade.
       const stripeSession = await stripe.checkout.sessions.create({
         success_url: billingUrl,
-        cancel_url: billingUrl,
+        cancel_url: env.NEXT_PUBLIC_APP_URL + "/dashboard/",
         payment_method_types: ["card"],
-        mode: "subscription",
+        mode: "payment",
         billing_address_collection: "auto",
         customer_email: user.email,
         line_items: [
           {
-            price: priceId,
+            price: product.default_price as string,
             quantity: 1,
           },
         ],
-        metadata: {
-          userId: user.id,
+        metadata: metadata,
+        payment_intent_data: {
+          metadata: metadata,
         },
       });
 
       redirectUrl = stripeSession.url as string;
     }
   } catch (error) {
+    console.error(error);
     throw new Error("Failed to generate user stripe session");
   }
 
