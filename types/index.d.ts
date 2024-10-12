@@ -1,7 +1,16 @@
-import { User } from "@prisma/client";
+import { Feedback, Recognition, User } from "@prisma/client";
 import type { Icon } from "lucide-react";
 
 import { Icons } from "@/components/shared/icons";
+
+export type UserWithFeedbacks = (User & {
+  surveys: (Survey & { responses: Feedback[] })[];
+});
+
+export type RecognitionWithReceiverAndSender = (Recognition & {
+  receiver: User,
+  giver: User
+})
 
 export type SiteConfig = {
   name: string;

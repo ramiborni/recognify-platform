@@ -11,6 +11,14 @@ export async function getTeamSurveys() {
   const surveys = await prisma.survey.findMany({
     where: {
       teamId: user?.teamId!,
+      selectedTeamMembers: {
+        some: {
+          id: user.id
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   });
 

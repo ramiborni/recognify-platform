@@ -23,6 +23,7 @@ import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { submitFeedback } from "@/actions/api/surveys";
 
 interface CompleteSurveyProps {
   survey: Survey;
@@ -48,11 +49,7 @@ const CompleteSurvey = ({ survey }: CompleteSurveyProps) => {
   }, [currentQuestionIndex, survey.questions]);
 
   const submitAnswersMutation = useMutation({
-    mutationFn: async (surveyAnswers: Record<string, string>) => {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      return surveyAnswers;
-    },
+    mutationFn: async (surveyAnswers: Record<string, string>) => await submitFeedback(survey.id, surveyAnswers),
     onSuccess: () => {
       setIsSubmitted(true);
       toast({
@@ -277,7 +274,6 @@ const CompleteSurvey = ({ survey }: CompleteSurveyProps) => {
                   </p>
                 )}
               </>
-              )
             </form>
           </motion.div>
         </AnimatePresence>

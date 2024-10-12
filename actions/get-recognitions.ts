@@ -19,7 +19,7 @@ export const getRecognitions = async (userId: string) => {
       giver: true,
     },
     orderBy: {
-      createdAt: "desc", // Sort by createdAt in descending order (newer to older)
+      createdAt: "desc",
     },
   });
 

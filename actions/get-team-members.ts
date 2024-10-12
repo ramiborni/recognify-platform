@@ -3,7 +3,7 @@ import { string } from "prop-types";
 
 import { prisma } from "@/lib/db";
 
-export const getTeamMembers = async (userId: string) => {
+export const getTeamMembers = async (userId: string, allData: boolean) => {
   if (!userId) {
     throw new Error("invalid userId");
   }
@@ -17,6 +17,11 @@ export const getTeamMembers = async (userId: string) => {
         include: {
           teamMembers: true,
           TeamInvitation: true,
+          surveys: {
+            include:{
+              responses: true
+            }
+          },
         },
       },
     },
@@ -27,6 +32,10 @@ export const getTeamMembers = async (userId: string) => {
   }
   if (user.role !== UserRole.TEAM_LEADER) {
     throw new Error("You're not allowed to do this operation");
+  }
+
+  if(allData){
+    return user.team?.teamMembers;
   }
 
   const teamMembers: {

@@ -80,7 +80,8 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
                   </Link>
                 }
 
-                <Button
+                {/* todo after a year
+                  <Button
                   variant="ghost"
                   size="icon"
                   className="ml-auto size-9 lg:size-8"
@@ -99,6 +100,7 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
                   )}
                   <span className="sr-only">Toggle Sidebar</span>
                 </Button>
+                  */}
               </div>
 
               <nav className="flex flex-1 flex-col gap-8 px-4 pt-4">

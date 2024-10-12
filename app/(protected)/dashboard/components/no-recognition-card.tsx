@@ -1,9 +1,17 @@
 import Link from "next/link";
+import { RecognitionWithReceiverAndSender } from "@/types";
 
 import { Button } from "@/components/ui/button";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
-const NoRecognitionCard = () => {
+interface NoRecognitionCardProps {
+  recognitions: RecognitionWithReceiverAndSender[];
+}
+
+const NoRecognitionCard = ({ recognitions }: NoRecognitionCardProps) => {
+  if (recognitions.length > 0) {
+    return <></>;
+  }
   return (
     <>
       <EmptyPlaceholder>

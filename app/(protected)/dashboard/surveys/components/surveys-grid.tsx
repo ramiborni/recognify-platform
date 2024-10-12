@@ -117,7 +117,7 @@ const SurveysGrid: React.FC<SurveysGridProps> = ({ surveys, userRole }) => {
                 </Badge>
               </CardTitle>
             </CardHeader>
-            <CardContent className="-mt-6 flex-grow">
+            <CardContent className="-mt-6 grow">
               <p className="mb-2 text-sm text-gray-500">
                 Created on {format(survey.createdAt, "MMM d, yyyy")}
               </p>
@@ -148,7 +148,7 @@ const SurveysGrid: React.FC<SurveysGridProps> = ({ surveys, userRole }) => {
               )}
               {userRole === UserRole.TEAM_LEADER && (
                 <>
-                  <Link href={"/dashboard/survey/" + survey.id + "/statistics"}>
+                  <Link href={"/dashboard/surveys/" + survey.id + "/statistics"}>
                     <Button>
                       <ChartPieIcon className="mr-2 size-6" />
                       Statistics and Answers
@@ -160,7 +160,7 @@ const SurveysGrid: React.FC<SurveysGridProps> = ({ surveys, userRole }) => {
                     size="sm"
                     onClick={() => handleEditClick(survey)}
                   >
-                    <Edit className="mr-2 h-4 w-4" />
+                    <Edit className="mr-2 size-4" />
                     Edit
                   </Button>
                   <Button
@@ -169,7 +169,7 @@ const SurveysGrid: React.FC<SurveysGridProps> = ({ surveys, userRole }) => {
                     size="sm"
                     onClick={() => handleDeleteClick(survey.id)}
                   >
-                    <Trash2 className="mr-2 h-4 w-4" />
+                    <Trash2 className="mr-2 size-4" />
                     Delete
                   </Button>
                 </>

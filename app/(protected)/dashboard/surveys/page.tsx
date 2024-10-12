@@ -25,7 +25,7 @@ const SurveysPage = async () => {
         {user?.role === UserRole.TEAM_LEADER && <AddNewSurvey />}
       </DashboardHeader>
       <div className="py-6">
-        <NoSurveysCard hideCreateSurvey />
+        <NoSurveysCard role={user?.role} surveys={surveys} hideCreateSurvey />
         <SurveysGrid userRole={user?.role!} surveys={surveys} />
       </div>
     </>

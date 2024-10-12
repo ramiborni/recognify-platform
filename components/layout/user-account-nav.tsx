@@ -82,17 +82,6 @@ export function UserAccountNav() {
                 </Link>
               </li>
 
-              <li className="rounded-lg text-foreground hover:bg-muted">
-                <Link
-                  href="/dashboard/settings"
-                  onClick={closeDrawer}
-                  className="flex w-full items-center gap-3 px-2.5 py-2"
-                >
-                  <Settings className="size-4" />
-                  <p className="text-sm">Settings</p>
-                </Link>
-              </li>
-
               <LogoutLink postLogoutRedirectURL="/">
                 <li className="rounded-lg text-foreground hover:bg-muted">
                   <div className="flex w-full items-center gap-3 px-2.5 py-2">
@@ -125,28 +114,12 @@ export function UserAccountNav() {
             )}
           </div>
         </div>
-        <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard" className="flex items-center space-x-2.5">
-            <LayoutDashboard className="size-4" />
-            <p className="text-sm">Dashboard</p>
-          </Link>
-        </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
-          <Link
-            href="/dashboard/settings"
-            className="flex items-center space-x-2.5"
-          >
-            <Settings className="size-4" />
-            <p className="text-sm">Settings</p>
-          </Link>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <LogoutLink postLogoutRedirectURL="/">
           <DropdownMenuItem className="cursor-pointer">
-            <div className="flex items-center space-x-2.5">
+            <div className="flex items-center space-x-2.5 text-red-600">
               <LogOut className="size-4" />
               <p className="text-sm">Log out </p>
             </div>
