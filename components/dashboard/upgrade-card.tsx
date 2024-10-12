@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { HeartIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,10 +20,12 @@ export function UpgradeCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="md:max-xl:px-4">
-        <Button size="sm" className="w-full">
-          <HeartIcon className="mr-2 size-4" />
-          Feedback
-        </Button>
+        <Link href="https://senja.io/p/recognify/r/YU81gZ">
+          <Button size="sm" className="w-full">
+            <HeartIcon className="mr-2 size-4" />
+            Feedback
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );

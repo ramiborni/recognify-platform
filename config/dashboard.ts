@@ -50,6 +50,18 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.TEAM_LEADER,
       },
       {
+        href: "https://recognify.featurebase.app/roadmap",
+        icon: "map",
+        title: "Roadmap",
+        authorizeOnly: UserRole.TEAM_LEADER,
+      },
+      {
+        href: "https://recognify.featurebase.app/roadmap",
+        icon: "map",
+        title: "Roadmap",
+        authorizeOnly: UserRole.USER,
+      },
+      {
         href: "/admin/orders",
         icon: "package",
         title: "Orders",

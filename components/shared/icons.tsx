@@ -29,6 +29,7 @@ import {
   Loader2,
   LucideIcon,
   LucideProps,
+  MapPinIcon,
   MessagesSquare,
   Moon,
   MoreVertical,
@@ -49,6 +50,7 @@ import {
 export type Icon = LucideIcon;
 
 export const Icons = {
+  map: ChevronsUp,
   gif: ({ ...props }: LucideProps) => (
     <svg
       viewBox="0 0 24 24"
