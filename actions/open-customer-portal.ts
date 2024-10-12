@@ -10,11 +10,11 @@ export type responseAction = {
   stripeUrl?: string;
 };
 
-const billingUrl = absoluteUrl("/dashboard/billing");
+const billingUrl = absoluteUrl("/dashboard/");
 
 export async function openCustomerPortal(
   userStripeId: string,
-): Promise<responseAction> {
+): Promise<string> {
   let redirectUrl: string = "";
 
   try {
@@ -27,8 +27,9 @@ export async function openCustomerPortal(
       redirectUrl = stripeSession.url as string;
     }
   } catch (error) {
+    console.log(error);
     throw new Error("Failed to generate user stripe session");
   }
 
-  redirect(redirectUrl);
+  return redirectUrl;
 }

@@ -223,7 +223,7 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">{user.name}</TableCell>
                     <TableCell>
-                      <Badge variant={userResponseStatus.get(user.id) ? "success" : "destructive"}>
+                      <Badge variant={userResponseStatus.get(user.id) ? "default" : "destructive"}>
                         {userResponseStatus.get(user.id) ? "Answered" : "Not Answered"}
                       </Badge>
                     </TableCell>
@@ -240,7 +240,7 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                         </DialogTrigger>
                         <DialogContent className="max-h-[90vh] max-w-3xl">
                           <DialogHeader>
-                            <DialogTitle>{user.name}'s Responses</DialogTitle>
+                            <DialogTitle>{user.name}&apos;s Responses</DialogTitle>
                           </DialogHeader>
                           <ScrollArea className="mt-4 h-[calc(90vh-4rem)] pr-4">
                             {getUserResponses(user.id).map((response, index) => (

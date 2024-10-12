@@ -7,7 +7,7 @@ import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = headers().get("Stripe-Signature") as string;
+  const signature = req.headers.get("stripe-signature") as string;
 
   let event: Stripe.Event;
 
@@ -25,26 +25,39 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     // Retrieve the subscription details from Stripe.
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string,
-    );
 
-    // Update the user stripe into in our database.
-    // Since this is the initial subscription, we need to update
-    // the subscription id and customer id.
-    await prisma.user.update({
-      where: {
-        id: session?.metadata?.userId,
-      },
-      data: {
-        stripeSubscriptionId: subscription.id,
-        stripeCustomerId: subscription.customer as string,
-        stripePriceId: subscription.items.data[0].price.id,
-        stripeCurrentPeriodEnd: new Date(
-          subscription.current_period_end * 1000,
-        ),
-      },
-    });
+
+    if (
+      session.customer_details &&
+      session.mode === "payment" &&
+      session.metadata &&
+      session.payment_status === "paid"
+    ) {
+      // Update the user stripe into in our database.
+      // Since this is the initial subscription, we need to update
+      // the subscription id and customer id.
+      await prisma.user.update({
+        where: {
+          id: session?.metadata?.userId,
+        },
+        data: {
+          //stripeSubscriptionId: subscription.id,
+          stripeCustomerId: session.customer as string,
+          ltdPlan: session.metadata.planName,
+          isLTD: true,
+          isLTDStart: new Date(),
+          //stripeCurrentPeriodEnd: new Date(
+          // subscription.current_period_end * 1000,)
+        },
+      });
+    }
+  }
+
+  /*
+
+  if(event.type === "payment_intent.succeeded"){
+    const session = event.data.object as Stripe.PaymentIntent;
+    console.log(session);
   }
 
   if (event.type === "invoice.payment_succeeded") {
@@ -72,6 +85,8 @@ export async function POST(req: Request) {
       });
     }
   }
+
+  */
 
   return new Response(null, { status: 200 });
 }

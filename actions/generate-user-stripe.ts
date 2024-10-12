@@ -2,11 +2,12 @@
 
 import { redirect } from "next/navigation";
 
+import { env } from "@/env.mjs";
+import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
-import { env } from "@/env.mjs";
 
 export type responseAction = {
   status: "success" | "error";
@@ -39,22 +40,41 @@ export async function generateUserStripe(
 
       redirectUrl = stripeSession.url as string;
     } else {
-      const product =  await stripe.products.retrieve(productId);
+      const product = await stripe.products.retrieve(productId);
 
       const metadata = {
         userId: user.id,
         allowedUsers: product.metadata.allowedUsers,
-        planName: product.metadata.allowedUsers,
+        planName: product.metadata.planName,
       };
+
+      let stripeCustomerId = user.stripeCustomerId;
+
+      if (!stripeCustomerId) {
+        // Step 2: If not, create a new Stripe customer
+        const customer = await stripe.customers.create({
+          email: user.email,
+          metadata: {
+            userId: user.id, // Store your internal user ID for reference
+          },
+        });
+
+        // Step 3: Save the customer ID to your database for future reference
+        stripeCustomerId = customer.id;
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { stripeCustomerId: stripeCustomerId },
+        });
+      }
 
       // User on Free Plan - Create a checkout session to upgrade.
       const stripeSession = await stripe.checkout.sessions.create({
-        success_url: billingUrl,
+        success_url: env.NEXT_PUBLIC_APP_URL + "/dashboard/",
         cancel_url: env.NEXT_PUBLIC_APP_URL + "/dashboard/",
         payment_method_types: ["card"],
         mode: "payment",
         billing_address_collection: "auto",
-        customer_email: user.email,
+        customer: stripeCustomerId,
         line_items: [
           {
             price: product.default_price as string,

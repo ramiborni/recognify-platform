@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { openCustomerPortal } from "@/actions/open-customer-portal";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { sidebarLinks } from "@/config/dashboard";
@@ -28,20 +29,27 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   const user = await getCurrentUser();
 
-  const filteredLinks = sidebarLinks.map((section) => ({
+  const billingUrl = await openCustomerPortal(user?.stripeCustomerId!);
+
+  const filteredLinks = sidebarLinks
+  .map((section) => ({
     ...section,
-    items: section.items.filter(
-      ({ authorizeOnly }) => !authorizeOnly || user?.role === authorizeOnly,
-    ),
+    items: section.items
+      .filter(({ authorizeOnly }) => !authorizeOnly || user?.role === authorizeOnly)
+      .map((item) => 
+        item.title === "Billing" 
+          ? { ...item, href: billingUrl } 
+          : item
+      ),
   }));
 
   const orgModelRendered = true;
 
   if (
-    !user?.isLTD &&
-    !user?.stripeSubscriptionId &&
-    !user?.stripePriceId &&
-    !user?.stripeCustomerId
+    !user?.isLTD ||
+    //!user?.stripeSubscriptionId &&
+    !user?.stripeCustomerId ||
+    !user?.ltdPlan
   ) {
     return <Plans></Plans>;
   }

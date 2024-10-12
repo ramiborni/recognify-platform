@@ -44,7 +44,7 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.TEAM_LEADER,
       },
       {
-        href: "/dashboard/billing",
+        href: "",
         icon: "billing",
         title: "Billing",
         authorizeOnly: UserRole.TEAM_LEADER,

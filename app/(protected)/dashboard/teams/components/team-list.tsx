@@ -27,7 +27,7 @@ dayjs.extend(timezone);
 const TeamList = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  const teamMembers = await getTeamMembers(user.id);
+  const teamMembers = await getTeamMembers(user.id, false);
 
   const userTimeZone = dayjs.tz.guess();
 
