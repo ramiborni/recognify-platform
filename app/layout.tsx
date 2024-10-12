@@ -37,6 +37,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           fontGeist.variable,
         )}
       >
+        <Script
+          data-domain="recognify.io"
+          src="https://plausible.io/js/script.js"
+        ></Script>
         {/* Intercom Script */}
         <Script
           id="intercom-init"
