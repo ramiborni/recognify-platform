@@ -11,7 +11,7 @@ const ListRecognitions = async () => {
   return (
     <div className="my-12 flex flex-col gap-y-6">
       {recognitions.map((recognition) => (
-        <RecognitionCard recognition={recognition} />
+        <RecognitionCard recognition={recognition} currentUserId={kindeUser.id} />
       ))}
     </div>
   );

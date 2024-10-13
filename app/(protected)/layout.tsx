@@ -31,15 +31,14 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   const billingUrl = await openCustomerPortal(user?.stripeCustomerId!);
 
-  const filteredLinks = sidebarLinks
-  .map((section) => ({
+  const filteredLinks = sidebarLinks.map((section) => ({
     ...section,
     items: section.items
-      .filter(({ authorizeOnly }) => !authorizeOnly || user?.role === authorizeOnly)
-      .map((item) => 
-        item.title === "Billing" 
-          ? { ...item, href: billingUrl } 
-          : item
+      .filter(
+        ({ authorizeOnly }) => !authorizeOnly || user?.role === authorizeOnly,
+      )
+      .map((item) =>
+        item.title === "Billing" ? { ...item, href: billingUrl } : item,
       ),
   }));
 
@@ -51,7 +50,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
     !user?.stripeCustomerId ||
     !user?.ltdPlan
   ) {
-    return <Plans></Plans>;
+    if (user?.isTeamLeader) return <Plans></Plans>;
   }
 
   return (

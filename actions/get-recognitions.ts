@@ -15,9 +15,17 @@ export const getRecognitions = async (userId: string) => {
       teamId: user?.teamId!,
     },
     include: {
-      receiver: true,
-      giver: true,
-      claps: true
+      receiver: {
+        include: {
+          recognitionsReceived: true,
+        },
+      },
+      giver: {
+        include: {
+          recognitionsReceived: true,
+        },
+      },
+      claps: true,
     },
     orderBy: {
       createdAt: "desc",

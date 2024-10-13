@@ -8,10 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
 
-export const POST = async (
-  req: Request,
-  res: Response,
-) => {
+export const POST = async (req: Request, res: Response) => {
   const token: string = req.headers
     .get("Authorization")!
     .replace("Bearer ", "");
@@ -39,12 +36,14 @@ export const POST = async (
   }
 
   const url = new URL(req.url);
+  console.log(url);
+
   const pathSegments = url.pathname.split("/");
+
 
   const recognitionId = pathSegments[pathSegments.length - 2];
 
   console.log(recognitionId);
-  console.log(url);
 
   const recognition = await prisma.recognition.findUnique({
     where: {
@@ -66,10 +65,7 @@ export const POST = async (
   return new Response("Clap has been added", { status: 201 });
 };
 
-export const DELETE = async (
-  req: Request,
-  res: Response,
-) => {
+export const DELETE = async (req: Request, res: Response) => {
   const token: string = req.headers
     .get("Authorization")!
     .replace("Bearer ", "");
