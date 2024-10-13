@@ -11,7 +11,8 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
-import { Maximize2 } from "lucide-react"
+import { Maximize2, BarChart2, ListIcon } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface SurveyResultsContentProps {
   survey: Survey & { responses: Feedback[] }
@@ -92,6 +93,28 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
     </div>
   )
 
+  const QuestionAnswersList = ({ question, index }: { question: any, index: number }) => (
+    <div className="space-y-4">
+      {survey.responses.map((response, responseIndex) => {
+        const answer = (response.responses as { questionId: string; userResponse: string }[])
+          .find(a => a.questionId === question.id)
+        const user = allUsers.find(u => u.id === response.userId)
+        return (
+          <div key={responseIndex} className="flex items-start space-x-4 p-4 rounded-lg">
+            <Avatar className="w-10 h-10">
+              <AvatarImage src={user?.profilePicture || `/placeholder.svg?height=40&width=40`} alt={user?.name || 'User'} />
+              <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 space-y-1">
+              <p className="font-medium text-sm">{user?.name || 'Anonymous User'}</p>
+              <p className="text-sm text-muted-foreground">{answer ? answer.userResponse : 'No response'}</p>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+
   return (
     <Tabs defaultValue="charts" className="w-full">
       <TabsList className="mb-4">
@@ -103,11 +126,19 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
           {survey.questions.map((question: any, index: number) => (
             <Card key={question.id}>
               <CardHeader className="flex flex-row items-center justify-between border-b">
-                <CardTitle className="text-lg">Question {index + 1}</CardTitle>
+                <CardTitle className="text-lg flex items-center space-x-2">
+                  {question.type === "multiple-choice" ? (
+                    <BarChart2 className="h-5 w-5" />
+                  ) : (
+                    <ListIcon className="h-5 w-5" />
+                  )}
+                  <span>Question {index + 1}</span>
+                </CardTitle>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" size="icon">
-                      <Maximize2 className="size-4" />
+                      <Maximize2 className="h-4 w-4" />
+                      <span className="sr-only">Expand question details</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-h-[90vh] max-w-4xl">
@@ -122,41 +153,54 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                             Total Responses: {survey.responses.length}
                           </p>
                         </div>
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Response Distribution</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <QuestionChart question={question} index={index} height={400} />
-                          </CardContent>
-                        </Card>
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Response Details</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Option</TableHead>
-                                  <TableHead>Count</TableHead>
-                                  <TableHead>Percentage</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {getQuestionChartData(index).map((data, i) => (
-                                  <TableRow key={i}>
-                                    <TableCell>{data.name}</TableCell>
-                                    <TableCell>{data.value}</TableCell>
-                                    <TableCell>
-                                      {((data.value / survey.responses.length) * 100).toFixed(2)}%
-                                    </TableCell>
+                        {question.type === "multiple-choice" ? (
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Response Distribution</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <QuestionChart question={question} index={index} height={400} />
+                            </CardContent>
+                          </Card>
+                        ) : (
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Responses</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <QuestionAnswersList question={question} index={index} />
+                            </CardContent>
+                          </Card>
+                        )}
+                        {question.type === "multiple-choice" && (
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Response Details</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Option</TableHead>
+                                    <TableHead>Count</TableHead>
+                                    <TableHead>Percentage</TableHead>
                                   </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </CardContent>
-                        </Card>
+                                </TableHeader>
+                                <TableBody>
+                                  {getQuestionChartData(index).map((data, i) => (
+                                    <TableRow key={i}>
+                                      <TableCell>{data.name}</TableCell>
+                                      <TableCell>{data.value}</TableCell>
+                                      <TableCell>
+                                        {((data.value / survey.responses.length) * 100).toFixed(2)}%
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </CardContent>
+                          </Card>
+                        )}
                       </div>
                     </ScrollArea>
                   </DialogContent>
@@ -165,9 +209,15 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
               <CardContent className="p-6">
                 <h3 className="mb-4 font-medium">{question.text}</h3>
                 <ScrollArea className="w-full">
-                  <div className="w-[600px]">
-                    <QuestionChart question={question} index={index} />
-                  </div>
+                  {question.type === "multiple-choice" ? (
+                    <div className="w-[600px]">
+                      <QuestionChart question={question} index={index} />
+                    </div>
+                  ) : (
+                    <div className="w-full max-h-[300px] overflow-y-auto pr-4">
+                      <QuestionAnswersList question={question} index={index} />
+                    </div>
+                  )}
                   <ScrollBar orientation="horizontal" />
                 </ScrollArea>
               </CardContent>

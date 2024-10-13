@@ -15,12 +15,21 @@ export const getTeamMembers = async (userId: string, allData: boolean) => {
     include: {
       team: {
         include: {
-          teamMembers: true,
+          teamMembers: {
+            include: {
+              recognitionsReceived: true,
+            },
+            where: {
+              NOT: {
+                id: userId,
+              },
+            },
+          },
           TeamInvitation: true,
           surveys: {
-            include:{
-              responses: true
-            }
+            include: {
+              responses: true,
+            },
           },
         },
       },
@@ -34,7 +43,7 @@ export const getTeamMembers = async (userId: string, allData: boolean) => {
     throw new Error("You're not allowed to do this operation");
   }
 
-  if(allData){
+  if (allData) {
     return user.team?.teamMembers;
   }
 
@@ -52,23 +61,35 @@ export const getTeamMembers = async (userId: string, allData: boolean) => {
       email: invitation.email,
       createdAt: invitation.createdAt,
       status: "Pending",
-      points: 0, //TODO add points here
+      points: 0, 
     });
   });
 
   user.team?.teamMembers.forEach((member) => {
+    const totalPoints = member.recognitionsReceived.reduce((acc, recognition) => acc + recognition.points, 0);
+
     teamMembers.push({
       name: member.name!,
       email: member.email!,
       createdAt: member.createdAt,
       status: "Accepted",
-      points: 0, //TODO add points here
+      points: totalPoints,
     });
   });
 
-  const sortedTeamMembers = teamMembers.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  const sortedTeamMembers = teamMembers.sort((a, b) => {
+    // Sort by createdAt (most recent first)
+    const dateDiff = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    
+    // Sort by status, prioritize "Accepted"
+    const statusDiff = a.status === "Accepted" && b.status !== "Accepted" ? -1 : b.status === "Accepted" && a.status !== "Accepted" ? 1 : 0;
+  
+    // Sort by points (highest first)
+    const pointsDiff = b.points - a.points;
+  
+    // Apply sorting rules in order: date, status, then points
+    return statusDiff || dateDiff || pointsDiff;
+  });
 
   return sortedTeamMembers;
 };

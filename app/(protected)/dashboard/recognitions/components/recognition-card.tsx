@@ -1,17 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { recordClap, removeClap } from "@/actions/api/recognitions";
 import { Clap, RecognationBadges, Recognition, User } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, AwardIcon } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 import { timeAgo } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/shared/icons";
 
 interface RecognitionCardProps {
@@ -19,11 +18,35 @@ interface RecognitionCardProps {
   currentUserId: string;
 }
 
+const recordClap = async (recognitionId: string) => {
+  // Implement your API call to record a clap
+  const response = await fetch(`/api/recognitions/${recognitionId}/clap`, {
+    method: 'POST',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to record clap');
+  }
+  return response.json();
+};
+
+const removeClap = async (recognitionId: string) => {
+  // Implement your API call to remove a clap
+  const response = await fetch(`/api/recognitions/${recognitionId}/clap`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to remove clap');
+  }
+  return response.json();
+};
+
 const RecognitionCard = ({ recognition, currentUserId }: RecognitionCardProps) => {
-  const [claps, setClaps] = useState(recognition.claps.length);
+  const [claps, setClaps] = useState(() => {
+    const userClap = recognition.claps.find(clap => clap.userId === currentUserId);
+    return userClap ? recognition.claps.length : recognition.claps.length -1;
+  });
   const [hasClapped, setHasClapped] = useState(recognition.claps.some(clap => clap.userId === currentUserId));
   const [isAnimating, setIsAnimating] = useState(false);
-  const queryClient = useQueryClient();
   const router = useRouter();
 
   const clapMutation = useMutation({
@@ -118,6 +141,12 @@ const RecognitionCard = ({ recognition, currentUserId }: RecognitionCardProps) =
       return () => clearTimeout(timer);
     }
   }, [isAnimating]);
+
+  useEffect(() => {
+    const userHasClapped = recognition.claps.some(clap => clap.userId === currentUserId);
+    setHasClapped(userHasClapped);
+    setClaps(recognition.claps.length);
+  }, [recognition, currentUserId]);
 
   return (
     <>
