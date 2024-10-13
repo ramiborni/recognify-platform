@@ -1,82 +1,134 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { Survey, Feedback, User } from "@prisma/client"
-import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts"
+import React, { useState } from "react";
+import { Feedback, Survey, User } from "@prisma/client";
+import { BarChart2, ListIcon, Maximize2 } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Badge } from "@/components/ui/badge"
-import { Maximize2, BarChart2, ListIcon } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface SurveyResultsContentProps {
-  survey: Survey & { responses: Feedback[] }
-  allUsers: User[]
+  survey: Survey & { responses: Feedback[] };
+  allUsers: User[];
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#a05195', '#d45087', '#f95d6a', '#ff7c43']
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#8884D8",
+  "#82CA9D",
+  "#a05195",
+  "#d45087",
+  "#f95d6a",
+  "#ff7c43",
+];
 
-const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, allUsers }) => {
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({
+  survey,
+  allUsers,
+}) => {
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const getQuestionChartData = (questionIndex: number) => {
-    const question = survey.questions[questionIndex] as any
-    const data: { [key: string]: number } = {}
+    const question = survey.questions[questionIndex] as any;
+    const data: { [key: string]: number } = {};
 
     if (question.type === "multiple-choice") {
       question.options.forEach((option: string) => {
-        data[option] = 0
-      })
+        data[option] = 0;
+      });
     }
 
     survey.responses.forEach((response) => {
-      const answers = response.responses as { questionId: string; userResponse: string }[]
-      const answer = answers.find(a => a.questionId === question.id)
+      const answers = response.responses as {
+        questionId: string;
+        userResponse: string;
+      }[];
+      const answer = answers.find((a) => a.questionId === question.id);
       if (answer) {
         if (data[answer.userResponse] !== undefined) {
-          data[answer.userResponse]++
+          data[answer.userResponse]++;
         } else {
-          data[answer.userResponse] = 1
+          data[answer.userResponse] = 1;
         }
       }
-    })
+    });
 
-    return Object.entries(data).map(([name, value]) => ({ name, value }))
-  }
+    return Object.entries(data).map(([name, value]) => ({ name, value }));
+  };
 
   const getTotalResponsesChartData = () => {
-    const totalResponses = survey.responses.length
-    const totalUsers = allUsers.length
+    const totalResponses = survey.responses.length;
+    const totalUsers = allUsers.length;
     return [
       { name: "Answered", value: totalResponses },
-      { name: "Not Answered", value: totalUsers - totalResponses }
-    ]
-  }
+      { name: "Not Answered", value: totalUsers - totalResponses },
+    ];
+  };
 
   const getUserResponseStatus = () => {
-    const responseStatus = new Map<string, boolean>()
+    const responseStatus = new Map<string, boolean>();
     allUsers.forEach((user) => {
-      responseStatus.set(user.id, false)
-    })
+      responseStatus.set(user.id, false);
+    });
     survey.responses.forEach((response) => {
-      responseStatus.set(response.userId, true)
-    })
-    return responseStatus
-  }
+      responseStatus.set(response.userId, true);
+    });
+    return responseStatus;
+  };
 
-  const userResponseStatus = getUserResponseStatus()
+  const userResponseStatus = getUserResponseStatus();
 
   const getUserResponses = (userId: string) => {
-    return survey.responses.find((response) => response.userId === userId)?.responses as { questionId: string; userResponse: string }[] || []
-  }
+    return (
+      (survey.responses.find((response) => response.userId === userId)
+        ?.responses as { questionId: string; userResponse: string }[]) || []
+    );
+  };
 
-  const QuestionChart = ({ question, index, height = 300 }: { question: any, index: number, height?: number }) => (
-    <div style={{ height: `${height}px`, width: '100%' }}>
+  const QuestionChart = ({
+    question,
+    index,
+    height = 300,
+  }: {
+    question: any;
+    index: number;
+    height?: number;
+  }) => (
+    <div style={{ height: `${height}px`, width: "100%" }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={getQuestionChartData(index)}>
           <XAxis dataKey="name" />
@@ -85,35 +137,57 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
           <Legend />
           <Bar dataKey="value">
             {getQuestionChartData(index).map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
             ))}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
-  )
+  );
 
-  const QuestionAnswersList = ({ question, index }: { question: any, index: number }) => (
+  const QuestionAnswersList = ({
+    question,
+    index,
+  }: {
+    question: any;
+    index: number;
+  }) => (
     <div className="space-y-4">
       {survey.responses.map((response, responseIndex) => {
-        const answer = (response.responses as { questionId: string; userResponse: string }[])
-          .find(a => a.questionId === question.id)
-        const user = allUsers.find(u => u.id === response.userId)
+        const answer = (
+          response.responses as { questionId: string; userResponse: string }[]
+        ).find((a) => a.questionId === question.id);
+        const user = allUsers.find((u) => u.id === response.userId);
         return (
-          <div key={responseIndex} className="flex items-start space-x-4 p-4 rounded-lg">
-            <Avatar className="w-10 h-10">
-              <AvatarImage src={user?.profilePicture || `/placeholder.svg?height=40&width=40`} alt={user?.name || 'User'} />
-              <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+          <div
+            key={responseIndex}
+            className="flex items-start space-x-4 rounded-lg p-4"
+          >
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src={
+                  user?.profilePicture || `/placeholder.svg?height=40&width=40`
+                }
+                alt={user?.name || "User"}
+              />
+              <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-1">
-              <p className="font-medium text-sm">{user?.name || 'Anonymous User'}</p>
-              <p className="text-sm text-muted-foreground">{answer ? answer.userResponse : 'No response'}</p>
+              <p className="text-sm font-medium">
+                {user?.name || "Anonymous User"}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {answer ? answer.userResponse : "No response"}
+              </p>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 
   return (
     <Tabs defaultValue="charts" className="w-full">
@@ -126,7 +200,7 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
           {survey.questions.map((question: any, index: number) => (
             <Card key={question.id}>
               <CardHeader className="flex flex-row items-center justify-between border-b">
-                <CardTitle className="text-lg flex items-center space-x-2">
+                <CardTitle className="flex items-center space-x-2 text-lg">
                   {question.type === "multiple-choice" ? (
                     <BarChart2 className="h-5 w-5" />
                   ) : (
@@ -148,7 +222,9 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                     <ScrollArea className="max-h-[calc(90vh-4rem)] pr-4">
                       <div className="space-y-6">
                         <div>
-                          <h3 className="mb-2 text-lg font-semibold">{question.text}</h3>
+                          <h3 className="mb-2 text-lg font-semibold">
+                            {question.text}
+                          </h3>
                           <p className="mb-4 text-sm text-muted-foreground">
                             Total Responses: {survey.responses.length}
                           </p>
@@ -159,7 +235,11 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                               <CardTitle>Response Distribution</CardTitle>
                             </CardHeader>
                             <CardContent>
-                              <QuestionChart question={question} index={index} height={400} />
+                              <QuestionChart
+                                question={question}
+                                index={index}
+                                height={400}
+                              />
                             </CardContent>
                           </Card>
                         ) : (
@@ -168,7 +248,10 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                               <CardTitle>Responses</CardTitle>
                             </CardHeader>
                             <CardContent>
-                              <QuestionAnswersList question={question} index={index} />
+                              <QuestionAnswersList
+                                question={question}
+                                index={index}
+                              />
                             </CardContent>
                           </Card>
                         )}
@@ -187,15 +270,22 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                  {getQuestionChartData(index).map((data, i) => (
-                                    <TableRow key={i}>
-                                      <TableCell>{data.name}</TableCell>
-                                      <TableCell>{data.value}</TableCell>
-                                      <TableCell>
-                                        {((data.value / survey.responses.length) * 100).toFixed(2)}%
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
+                                  {getQuestionChartData(index).map(
+                                    (data, i) => (
+                                      <TableRow key={i}>
+                                        <TableCell>{data.name}</TableCell>
+                                        <TableCell>{data.value}</TableCell>
+                                        <TableCell>
+                                          {(
+                                            (data.value /
+                                              survey.responses.length) *
+                                            100
+                                          ).toFixed(2)}
+                                          %
+                                        </TableCell>
+                                      </TableRow>
+                                    ),
+                                  )}
                                 </TableBody>
                               </Table>
                             </CardContent>
@@ -214,7 +304,7 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                       <QuestionChart question={question} index={index} />
                     </div>
                   ) : (
-                    <div className="w-full max-h-[300px] overflow-y-auto pr-4">
+                    <div className="max-h-[300px] w-full overflow-y-auto pr-4">
                       <QuestionAnswersList question={question} index={index} />
                     </div>
                   )}
@@ -237,13 +327,18 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    }
                     outerRadius={150}
                     fill="#8884d8"
                     dataKey="value"
                   >
                     {getTotalResponsesChartData().map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -273,8 +368,16 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">{user.name}</TableCell>
                     <TableCell>
-                      <Badge variant={userResponseStatus.get(user.id) ? "default" : "destructive"}>
-                        {userResponseStatus.get(user.id) ? "Answered" : "Not Answered"}
+                      <Badge
+                        variant={
+                          userResponseStatus.get(user.id)
+                            ? "default"
+                            : "destructive"
+                        }
+                      >
+                        {userResponseStatus.get(user.id)
+                          ? "Answered"
+                          : "Not Answered"}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -290,20 +393,33 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
                         </DialogTrigger>
                         <DialogContent className="max-h-[90vh] max-w-3xl">
                           <DialogHeader>
-                            <DialogTitle>{user.name}&apos;s Responses</DialogTitle>
+                            <DialogTitle>
+                              {user.name}&apos;s Responses
+                            </DialogTitle>
                           </DialogHeader>
                           <ScrollArea className="mt-4 h-[calc(90vh-4rem)] pr-4">
-                            {getUserResponses(user.id).map((response, index) => (
-                              <Card key={response.questionId} className="mb-4">
-                                <CardHeader className="border-b">
-                                  <CardTitle className="text-sm">Question {index + 1}</CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-4">
-                                  <p className="mb-2 font-medium">{(survey.questions[index] as any).text}</p>
-                                  <p className="text-sm text-muted-foreground">Answer: {response.userResponse}</p>
-                                </CardContent>
-                              </Card>
-                            ))}
+                            {getUserResponses(user.id).map(
+                              (response, index) => (
+                                <Card
+                                  key={response.questionId}
+                                  className="mb-4"
+                                >
+                                  <CardHeader className="border-b">
+                                    <CardTitle className="text-sm">
+                                      Question {index + 1}
+                                    </CardTitle>
+                                  </CardHeader>
+                                  <CardContent className="p-4">
+                                    <p className="mb-2 font-medium">
+                                      {(survey.questions[index] as any).text}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                      Answer: {response.userResponse}
+                                    </p>
+                                  </CardContent>
+                                </Card>
+                              ),
+                            )}
                           </ScrollArea>
                         </DialogContent>
                       </Dialog>
@@ -316,7 +432,7 @@ const SurveyResultsContent: React.FC<SurveyResultsContentProps> = ({ survey, all
         </Card>
       </TabsContent>
     </Tabs>
-  )
-}
+  );
+};
 
-export default SurveyResultsContent
+export default SurveyResultsContent;

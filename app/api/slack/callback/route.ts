@@ -57,9 +57,9 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
         },
       });
       if (!user) {
-        return {
-          error: "User not found.",
-        };
+        return new Response("User not found", {
+          status: 404,
+        });
       }
 
       await prisma.user.update({
@@ -71,10 +71,11 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
         },
       });
       return NextResponse.redirect(
-        env.NEXT_PUBLIC_APP_URL + "/dashboard/integrations?success=true&type=slack",
+        env.NEXT_PUBLIC_APP_URL +
+          "/dashboard/integrations?success=true&type=slack",
       );
     } catch (e) {
-        console.error(e);
+      console.error(e);
       return new Response("Failed to add notification method", {
         status: 500,
       });
