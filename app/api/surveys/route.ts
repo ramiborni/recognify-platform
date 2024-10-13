@@ -1,9 +1,11 @@
+import { sendSlackNotification } from "@/actions/slack-notifications";
 import { InviteSurvey } from "@/emails/invite-survey";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
 import { Survey, SurveyStatus, UserRole } from "@prisma/client";
 import { InputJsonValue } from "@prisma/client/runtime/library";
 import { jwtDecode } from "jwt-decode";
 
+import { env } from "@/env.mjs";
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
 
@@ -136,6 +138,13 @@ export const POST = async (req, res) => {
       status: SurveyStatus.ACTIVE,
     },
   });
+  if (user.slackWebhook) {
+    sendSlackNotification({
+      type: "survey",
+      surveyUrl: env.NEXT_PUBLIC_APP_URL + "/dashboard/surveys/" + survey.id,
+      webhookUrl: user.slackWebhook!,
+    });
+  }
 
   if (survey) {
     for (let i = 0; i < selectedTeamMembers.length; i++) {

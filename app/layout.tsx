@@ -15,6 +15,7 @@ import { Analytics } from "@/components/analytics";
 import IntercomWidget from "@/components/intercom-widget";
 import Providers from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
+import NextTopLoader from 'nextjs-toploader';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -37,6 +38,18 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           fontGeist.variable,
         )}
       >
+        <NextTopLoader
+          color="#3d61ff"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          zIndex={1600}
+        />
+
         <Script
           data-domain="recognify.io"
           src="https://plausible.io/js/script.js"

@@ -9,6 +9,9 @@ export const env = createEnv({
     STRIPE_API_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
     AZURE_BLOB_CONNECTION_STRING: z.string().min(1),
+    SLACK_CLIENT_ID: z.string().min(1),
+    SLACK_CLIENT_SECRET: z.string().min(1),
+    SLACK_REDIRECT_URI: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -42,5 +45,10 @@ export const env = createEnv({
 
     // Azure
     AZURE_BLOB_CONNECTION_STRING: process.env.AZURE_BLOB_CONNECTION_STRING,
+
+    // Slack
+    SLACK_CLIENT_ID: process.env.SLACK_CLIENT_ID,
+    SLACK_CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
+    SLACK_REDIRECT_URI: process.env.SLACK_REDIRECT_URI
   },
 });

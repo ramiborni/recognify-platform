@@ -44,6 +44,8 @@ model User {
   teamId       String?
   isTeamLeader Boolean @default(false)
 
+  slackWebhook String?
+
   assagnedSurveys Survey[]
 
   claps Clap[]

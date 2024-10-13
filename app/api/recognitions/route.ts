@@ -7,6 +7,8 @@ import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
+import { sendSlackNotification } from "@/actions/slack-notifications";
+import { env } from "@/env.mjs";
 
 export const POST = async (req: Request, res: Response) => {
   const token: string = req.headers
@@ -83,6 +85,18 @@ export const POST = async (req: Request, res: Response) => {
     },
   });
 
+  if (isPublic && user.slackWebhook) {
+    sendSlackNotification({
+      type: "recognition",
+      recognitionUrl: env.NEXT_PUBLIC_APP_URL + "/dashboard/recognitions/",
+      senderName: user.name!,
+      receiverName: receiver.name!,
+      points:points,
+      webhookUrl: user.slackWebhook!,
+    });
+  }
+
+
   if (recognition) {
     const { data, error } = await resend.emails.send({
       from: "no-reply@recognify.io",
@@ -99,7 +113,6 @@ export const POST = async (req: Request, res: Response) => {
         "X-Entity-Ref-ID": new Date().getTime() + "",
       },
     });
-    console.log(data);
   }
 
   return new Response("Recognition has been added", { status: 201 });

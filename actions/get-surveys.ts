@@ -37,6 +37,7 @@ export const getSurveyById = async (surveyId: string, userId: string) => {
           userId: userId,
         },
       },
+      selectedTeamMembers: true
     },
   });
 

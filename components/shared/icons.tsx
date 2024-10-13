@@ -9,6 +9,7 @@ import {
   Badge,
   BadgeCheck,
   BicepsFlexed,
+  Blocks,
   BookOpen,
   Check,
   ChevronLeft,
@@ -104,6 +105,7 @@ export const Icons = {
     </svg>
   ),
   map: ChevronsUp,
+  blocks: Blocks,
   gif: ({ ...props }: LucideProps) => (
     <svg
       viewBox="0 0 24 24"

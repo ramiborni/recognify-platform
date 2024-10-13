@@ -44,6 +44,12 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.TEAM_LEADER,
       },
       {
+        href: "/dashboard/integrations",
+        icon: "blocks",
+        title: "Integrations",
+        authorizeOnly: UserRole.TEAM_LEADER,
+      },
+      {
         href: "",
         icon: "billing",
         title: "Billing",

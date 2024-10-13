@@ -1,11 +1,11 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { DashboardHeader } from "@/components/dashboard/header";
+import { Icons } from "@/components/shared/icons";
 
 export default function DashboardLoading() {
   return (
     <>
-      <DashboardHeader heading="Dashboard" text="Current Role :" />
-      <Skeleton className="size-full rounded-lg" />
+      <div className="flex min-h-screen -mt-12 items-center justify-center">
+        <Icons.spinner className="mr-2 size-10 animate-spin text-primary" />
+      </div>
     </>
   );
 }
