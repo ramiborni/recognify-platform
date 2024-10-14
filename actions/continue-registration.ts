@@ -24,7 +24,7 @@ export const continueRegistration = async (id: string, invitationToken: string) 
     return;
   }
 
-  const newUser = await prisma.user.create({
+  let newUser = await prisma.user.create({
     data: {
       id: kindeUser.id,
       name: `${kindeUser.given_name ?? ""} ${kindeUser.family_name ?? ""}`.trim(),
@@ -48,7 +48,7 @@ export const continueRegistration = async (id: string, invitationToken: string) 
   }
 
   if (!invitation) {
-    await prisma.user.update({
+    newUser = await prisma.user.update({
       where:{
         id: kindeUser.id!
       },
@@ -86,4 +86,6 @@ export const continueRegistration = async (id: string, invitationToken: string) 
       },
     });
   }
+
+  return newUser;
 };

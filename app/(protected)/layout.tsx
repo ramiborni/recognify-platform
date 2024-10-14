@@ -31,8 +31,6 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
   const { getAccessTokenRaw, getUser } = await getKindeServerSession();
   axiosConfig(await getAccessTokenRaw());
 
- 
-
   const kindeUser = await getUser();
 
   const heads = headers();
@@ -43,9 +41,11 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   const invitationToken = url.searchParams.get("invitationToken");
 
-  await continueRegistration(kindeUser.id, invitationToken!);
+  let user = await continueRegistration(kindeUser.id, invitationToken!);
 
-  const user = await getCurrentUser();
+  if(!user){
+    user = await getCurrentUser() as User;
+  }
 
   const billingUrl = await openCustomerPortal(user?.stripeCustomerId!);
 
