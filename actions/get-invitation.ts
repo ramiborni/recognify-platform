@@ -21,7 +21,7 @@ export const getInvitation = async (invitationToken: string) => {
   });
 
   if (!invitation) {
-    throw new Error("Invitation not found");
+    return ("Invitation not found");
   }
 
   return invitation;

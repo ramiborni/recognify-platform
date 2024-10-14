@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useGetUser } from "@/actions/api/users/query";
 import {
   LogoutLink,
   useKindeBrowserClient,
@@ -19,9 +18,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/shared/user-avatar";
+import { User } from "@prisma/client";
 
-export function UserAccountNav() {
-  const { data: user, isLoading, refetch } = useGetUser();
+interface UserAccountNavProps{
+  user: User
+}
+
+export function UserAccountNav({user}: UserAccountNavProps) {
 
   const [open, setOpen] = useState(false);
   const closeDrawer = () => {
@@ -29,12 +32,6 @@ export function UserAccountNav() {
   };
 
   const { isMobile } = useMediaQuery();
-
-  useEffect(() => {
-    if (!user || !isLoading) {
-      refetch && refetch();
-    }
-  }, [user, isLoading, refetch]);
 
   if (!user)
     return (

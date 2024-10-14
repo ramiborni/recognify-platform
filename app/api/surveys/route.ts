@@ -95,6 +95,27 @@ export const POST = async (req, res) => {
     });
   }
 
+  // Check if the user's ltdPlan is 'starter'
+  if (user.ltdPlan === "starter") {
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Start of current month
+
+    // Count how many surveys the user has created this month
+    const surveyCount = await prisma.survey.count({
+      where: {
+        teamId: user.teamId!,
+        createdAt: {
+          gte: startOfMonth, // Only count surveys created since the beginning of this month
+        },
+      },
+    });
+
+    if (surveyCount >= 10) {
+      return new Response("You have reached the limit of 10 surveys for this month on the Starter plan", {
+        status: 403,
+      });
+    }
+  }
+
   const {
     title,
     description,
@@ -138,6 +159,7 @@ export const POST = async (req, res) => {
       status: SurveyStatus.ACTIVE,
     },
   });
+  
   if (user.slackWebhook) {
     sendSlackNotification({
       type: "survey",
@@ -168,6 +190,7 @@ export const POST = async (req, res) => {
     status: 201,
   });
 };
+
 
 export const DELETE = async (req, res) => {
   const token: string = req.headers

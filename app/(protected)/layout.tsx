@@ -1,6 +1,9 @@
 import React, { Suspense } from "react";
+import { headers } from "next/headers";
+import { continueRegistration } from "@/actions/continue-registration";
 import { openCustomerPortal } from "@/actions/open-customer-portal";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { User, UserRole } from "@prisma/client";
 
 import { sidebarLinks } from "@/config/dashboard";
 import { axiosConfig } from "@/lib/axios-config";
@@ -24,8 +27,19 @@ interface ProtectedLayoutProps {
 }
 
 export default async function Dashboard({ children }: ProtectedLayoutProps) {
-  const { getAccessTokenRaw } = await getKindeServerSession();
+  const { getAccessTokenRaw, getUser } = await getKindeServerSession();
+  const kindeUser = await getUser();
   axiosConfig(await getAccessTokenRaw());
+
+  const heads = headers();
+
+  const pathname = heads.get("x-url");
+
+  const url = new URL(pathname!);
+
+  const invitationToken = url.searchParams.get("invitationToken");
+
+  await continueRegistration(kindeUser.id, invitationToken!);
 
   const user = await getCurrentUser();
 
@@ -44,15 +58,23 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   const orgModelRendered = true;
 
+  console.log(
+    !user?.isLTD ||
+      //!user?.stripeSubscriptionId &&
+      !user?.stripeCustomerId ||
+      !user?.ltdPlan,
+  );
+
   if (
     !user?.isLTD ||
-    //!user?.stripeSubscriptionId &&
     !user?.stripeCustomerId ||
-    !user?.ltdPlan
+    !user?.ltdPlan // Removed the commented-out condition
   ) {
-    if (user?.isTeamLeader) return <Plans></Plans>;
+    // If the above condition is met, check this next condition
+    if (user?.isTeamLeader || user?.role === UserRole.TEAM_LEADER) {
+      return <Plans />;
+    }
   }
-
   return (
     <Suspense
       fallback={
@@ -79,7 +101,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
                   </div>
 
                   <ModeToggle />
-                  <UserAccountNav />
+                  <UserAccountNav user={user as User} />
                 </MaxWidthWrapper>
               </header>
 

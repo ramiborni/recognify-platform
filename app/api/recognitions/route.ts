@@ -1,19 +1,20 @@
 import { NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
+import { sendSlackNotification } from "@/actions/slack-notifications";
 import { AddedRecognition } from "@/emails/added-recognition";
 import { jwtValidationResponse, validateToken } from "@kinde/jwt-validator";
 import { Recognition } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
 
+import { env } from "@/env.mjs";
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
-import { sendSlackNotification } from "@/actions/slack-notifications";
-import { env } from "@/env.mjs";
 
 export const POST = async (req: Request, res: Response) => {
-  const token: string = req.headers
-    .get("Authorization")!
-    .replace("Bearer ", "");
+  const token: string = (req.headers.get("Authorization")! || "").replace(
+    "Bearer ",
+    "",
+  );
   const validationResult: jwtValidationResponse = await validateToken({
     token,
     domain: process.env.KINDE_ISSUER_URL,
@@ -91,11 +92,10 @@ export const POST = async (req: Request, res: Response) => {
       recognitionUrl: env.NEXT_PUBLIC_APP_URL + "/dashboard/recognitions/",
       senderName: user.name!,
       receiverName: receiver.name!,
-      points:points,
+      points: points,
       webhookUrl: user.slackWebhook!,
     });
   }
-
 
   if (recognition) {
     const { data, error } = await resend.emails.send({

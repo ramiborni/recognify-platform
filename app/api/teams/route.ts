@@ -58,7 +58,40 @@ export const POST = async (req, res) => {
 
     console.log("Creating team invitation for team id: ", user.teamId);
 
-    console.log(prisma.teamInvitation.fields);
+    const team = await prisma.team.findUnique({
+      where: {
+        id: user.teamId,
+      },
+      select: {
+        teamMembers: {
+          where: {
+            id: {
+              not: userId, 
+            },
+          },
+          include: {
+            recognitionsReceived: {
+              select: {
+                points: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const memberCount = team!.teamMembers.length;
+
+    if (
+      (user.ltdPlan === "starter" && memberCount >= 20) ||
+      (user.ltdPlan === "growth" && memberCount >= 100)
+    ) {
+      return new Response(
+        `Cannot invite more members. The ${user.ltdPlan} plan allows a maximum of ${user.ltdPlan === "starter" ? 20 : 100} members.`,
+        { status: 403 }
+      );
+    }
+
 
     const invitedMember = await prisma.teamInvitation.create({
       data: {

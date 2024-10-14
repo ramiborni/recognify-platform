@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { addUser } from "@/actions/api/users";
-import { useGetUser } from "@/actions/api/users/query";
 import { AddUserMutationProps } from "@/actions/api/users/types";
 import {
   CreateOrgLink,
@@ -28,50 +27,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const OrgModel = () => {
-  const searchParams = useSearchParams();
-  const invitationToken = searchParams.get("invitationToken");
-
-  const {
-    user: kindeUser,
-    getToken,
-    isLoading: isAuthLoading,
-    isAuthenticated,
-  } = useKindeBrowserClient();
+  return <></>;
 
   const [isAxiosConfigured, setIsAxiosConfigured] = useState(false);
 
   const [addUserReqSent, setAddUserReqSent] = useState(false);
 
-  useEffect(() => {
-    const accessToken = getToken();
-    if (accessToken) {
-      axiosConfig(accessToken!);
-      setIsAxiosConfigured(true);
-    }
-  }, [kindeUser, isAuthLoading, getToken]);
-
-  const { mutate: AddUserMutate, isError } = useMutation({
-    mutationFn: async ({ inviteToken }: AddUserMutationProps) =>
-      await addUser(inviteToken),
-    onSuccess: () => setOpenOnBoardingDialog(true),
-    onError: (error) => console.error(error),
-  });
-
   const [step, setStep] = useState(0);
   const [openOnBoardingDialog, setOpenOnBoardingDialog] = useState(false);
   const [teamName, setTeamName] = useState("");
-
-  useEffect(() => {
-    if (isAxiosConfigured && getToken() && !isError && !addUserReqSent) {
-      AddUserMutate({ inviteToken: invitationToken! });
-      setAddUserReqSent(true);
-    }
-  }, [invitationToken, getToken, isAxiosConfigured, addUserReqSent]);
-
-  const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setTeamName(e.target.value);
-  };
 
   const Step0 = () => (
     <>
@@ -111,7 +75,6 @@ const OrgModel = () => {
       <div>
         <Label htmlFor="team-name">Team Name</Label>
         <Input
-          onChange={handleTeamNameChange}
           id="team-name"
           placeholder="Enter Team Name"
           value={teamName}

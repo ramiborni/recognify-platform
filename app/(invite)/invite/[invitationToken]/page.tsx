@@ -19,6 +19,12 @@ const InvitationLandingPage = async ({
 
   const invitationData = await getInvitation(invitationToken!);
 
+  if(invitationData === "Invitation not found"){
+    return (
+      <>Invitation is wrong or missing, please check with the team leader</>
+    )
+  }
+
   return (
     <MaxWidthWrapper
       className="flex h-14 items-center justify-center py-4"
