@@ -6,6 +6,7 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { PlusIcon } from "lucide-react";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface AddTeamMemberMutateProps {
   invitationName: string;
@@ -27,6 +29,8 @@ interface AddTeamMemberMutateProps {
 
 interface AddTeamMemberButtonProps {}
 const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
+  const router = useRouter();
+
   const {
     user,
     getToken,
@@ -45,6 +49,7 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
     }: AddTeamMemberMutateProps) =>
       await addTeamMember(invitationName, invitationEmail),
     onSuccess: async () => {
+      router.refresh();
       toast({
         variant: "success",
         title: "Team member added successfully",
@@ -52,6 +57,15 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
       });
     },
     onError: (error: AxiosError) => {
+      if(error.message){
+        toast({
+          variant: "destructive",
+          title: "Oops! Something went wrong",
+          description:
+            (error.message as string) ||
+            "An error occurred while adding the team member.",
+        });
+      }
       toast({
         variant: "destructive",
         title: "Oops! Something went wrong",
@@ -63,11 +77,23 @@ const AddTeamMemberButton = ({}: AddTeamMemberButtonProps) => {
   });
 
   const addMember = () => {
-    if (!name || !email) {
+    const addMemberSchema = z.object({
+      name: z.string().trim().min(1, "Name is required"),
+      email: z.string().trim().email("Invalid email format"),
+    });
+
+    const validationResult = addMemberSchema.safeParse({
+      name: name.trim(), // Trim name
+      email: email.trim(), // Trim email
+    });
+
+    if (!validationResult.success) {
+      // If validation fails, show the error message
       return toast({
         variant: "destructive",
-        title: "Missing Information",
-        description: "Please provide both name and email to add a team member.",
+        title: "Invalid Input",
+        description:
+          validationResult.error.issues[0]?.message || "Invalid data provided",
       });
     }
 

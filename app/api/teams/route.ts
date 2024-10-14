@@ -7,12 +7,12 @@ import { jwtDecode } from "jwt-decode";
 
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
+import * as Sentry from "@sentry/nextjs";
 
 export const POST = async (req, res) => {
   try {
-    const token: string = req.headers
-      .get("Authorization")!
-      .replace("Bearer ", "");
+    const token: string = (req.headers.get("Authorization") || "").replace("Bearer ", "");
+
     const validationResult: jwtValidationResponse = await validateToken({
       token,
       domain: process.env.KINDE_ISSUER_URL,
@@ -56,6 +56,17 @@ export const POST = async (req, res) => {
       });
     }
 
+    // Check if there's already an invitation for the same email
+    const existingInvitation = await prisma.teamInvitation.findUnique({
+      where: { email },
+    });
+
+    if (existingInvitation) {
+      return new Response("An invitation with this email already exists", {
+        status: 400,
+      });
+    }
+
     console.log("Creating team invitation for team id: ", user.teamId);
 
     const team = await prisma.team.findUnique({
@@ -92,7 +103,6 @@ export const POST = async (req, res) => {
       );
     }
 
-
     const invitedMember = await prisma.teamInvitation.create({
       data: {
         email,
@@ -119,8 +129,6 @@ export const POST = async (req, res) => {
         senderName: user.name!,
         invitationToken: invitedMember.token,
       }),
-      // Set this to prevent Gmail from threading emails.
-      // More info: https://resend.com/changelog/custom-email-headers
       headers: {
         "X-Entity-Ref-ID": new Date().getTime() + "",
       },
@@ -148,9 +156,7 @@ export const POST = async (req, res) => {
 export const GET = async (req: Request, res: Response) => {
   try {
     // Extract token from the request headers
-    const token: string = req.headers
-      .get("Authorization")!
-      .replace("Bearer ", "");
+    const token: string = (req.headers.get("Authorization") || "").replace("Bearer ", "");
 
     // Validate the token using Kinde validation
     const validationResult: jwtValidationResponse = await validateToken({

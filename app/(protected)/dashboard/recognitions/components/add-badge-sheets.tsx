@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { RecognationBadges } from "@prisma/client";
 import { AwardIcon } from "lucide-react";
 
@@ -8,6 +10,7 @@ import {
   SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -49,16 +52,28 @@ export function AddBadgeSheet({
   selectedBadges,
   setSelectedBadges,
 }: BadgeSheetProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [tempSelectedBadges, setTempSelectedBadges] = useState<RecognationBadges[]>(selectedBadges);
+
   const toggleBadge = (badgeId: RecognationBadges) => {
-    if (selectedBadges.includes(badgeId)) {
-      setSelectedBadges(selectedBadges.filter((id) => id !== badgeId));
+    if (tempSelectedBadges.includes(badgeId)) {
+      setTempSelectedBadges(tempSelectedBadges.filter((id) => id !== badgeId));
     } else {
-      setSelectedBadges([...selectedBadges, badgeId]);
+      setTempSelectedBadges([...tempSelectedBadges, badgeId]);
     }
   };
 
+  const handleSave = () => {
+    setSelectedBadges(tempSelectedBadges);
+    setIsOpen(false);
+  };
+
+  const handleClearAll = () => {
+    setTempSelectedBadges([]);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -67,6 +82,7 @@ export function AddBadgeSheet({
                 className="relative bg-[#e245d6]/70 hover:bg-[#e245d6]"
                 size="icon"
                 aria-label="Add badges"
+                onClick={() => setIsOpen(true)}
               >
                 <AwardIcon className="size-4" />
                 {selectedBadges.length > 0 && (
@@ -95,7 +111,7 @@ export function AddBadgeSheet({
               key={badge.id}
               variant="outline"
               className={`w-full justify-start ${
-                selectedBadges.includes(badge.id)
+                tempSelectedBadges.includes(badge.id)
                   ? "border-primary bg-primary/10"
                   : ""
               }`}
@@ -103,24 +119,24 @@ export function AddBadgeSheet({
             >
               <span className="mr-2 text-2xl">{badge.icon}</span>
               {badge.name}
-              {selectedBadges.includes(badge.id) && (
+              {tempSelectedBadges.includes(badge.id) && (
                 <span className="ml-auto text-primary">✓</span>
               )}
             </Button>
           ))}
         </div>
-        <div className="mt-6 flex justify-between">
+        <SheetFooter className="mt-6">
           <Button
             variant="outline"
-            onClick={() => setSelectedBadges([])}
-            disabled={selectedBadges.length === 0}
+            onClick={handleClearAll}
+            disabled={tempSelectedBadges.length === 0}
           >
             Clear All
           </Button>
           <SheetClose asChild>
-            <Button>Confirm ({selectedBadges.length})</Button>
+            <Button onClick={handleSave}>Save ({tempSelectedBadges.length})</Button>
           </SheetClose>
-        </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

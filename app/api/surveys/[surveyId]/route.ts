@@ -9,9 +9,8 @@ export const PATCH = async (
   req: Request,
   { params }: { params: { surveyId: string } },
 ) => {
-  const token: string = req.headers
-    .get("Authorization")!
-    .replace("Bearer ", "");
+  const token: string = (req.headers.get("Authorization") || "").replace("Bearer ", "");
+
   const validationResult: jwtValidationResponse = await validateToken({
     token,
     domain: process.env.KINDE_ISSUER_URL,
@@ -83,9 +82,8 @@ export const DELETE = async (
   req: Request,
   { params }: { params: { surveyId: string } },
 ) => {
-  const token: string = req.headers
-    .get("Authorization")!
-    .replace("Bearer ", "");
+  const token: string = (req.headers.get("Authorization") || "").replace("Bearer ", "");
+
   const validationResult: jwtValidationResponse = await validateToken({
     token,
     domain: process.env.KINDE_ISSUER_URL,

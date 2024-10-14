@@ -9,9 +9,8 @@ import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
 
 export const POST = async (req, res) => {
-  const token: string = req.headers
-    .get("Authorization")!
-    .replace("Bearer ", "");
+  const token: string = (req.headers.get("Authorization") || "").replace("Bearer ", "");
+
   const validationResult: jwtValidationResponse = await validateToken({
     token,
     domain: process.env.KINDE_ISSUER_URL,

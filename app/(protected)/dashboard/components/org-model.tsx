@@ -27,11 +27,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const OrgModel = () => {
-  return <></>;
+  const {
+    user: kindeUser,
+    getToken,
+    isLoading: isAuthLoading,
+    isAuthenticated,
+  } = useKindeBrowserClient();
 
   const [isAxiosConfigured, setIsAxiosConfigured] = useState(false);
 
-  const [addUserReqSent, setAddUserReqSent] = useState(false);
+  useEffect(() => {
+    const accessToken = getToken();
+    if (accessToken) {
+      axiosConfig(accessToken!);
+      setIsAxiosConfigured(true);
+    }
+  }, [kindeUser, isAuthLoading, getToken]);
+
+  return <></>;
 
   const [step, setStep] = useState(0);
   const [openOnBoardingDialog, setOpenOnBoardingDialog] = useState(false);

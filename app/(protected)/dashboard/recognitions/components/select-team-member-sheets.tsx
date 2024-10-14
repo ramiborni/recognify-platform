@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetTeamMembers } from "@/actions/api/teams/query";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Check, Loader2Icon, UserPlus } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -31,6 +32,9 @@ export function SelectTeamMemberSheet({
   selectedMember,
   setSelectedMember,
 }: TeamMemberSheetProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [tempSelectedMember, setTempSelectedMember] = useState<string | null>(selectedMember);
+
   const {
     data: team,
     isLoading,
@@ -53,8 +57,13 @@ export function SelectTeamMemberSheet({
     }
   }, [team, isLoading, error]);
 
+  const handleSave = () => {
+    setSelectedMember(tempSelectedMember!);
+    setIsOpen(false);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -63,6 +72,7 @@ export function SelectTeamMemberSheet({
                 size="icon"
                 aria-label="Add team member"
                 className="relative bg-primary/90"
+                onClick={() => setIsOpen(true)}
               >
                 <UserPlus className="size-4" />
                 {selectedMember && (
@@ -90,9 +100,9 @@ export function SelectTeamMemberSheet({
                 key={member.id}
                 variant="outline"
                 className={`w-full justify-start py-6 ${
-                  selectedMember === member.id ? "border-primary" : ""
+                  tempSelectedMember === member.id ? "border-primary" : ""
                 }`}
-                onClick={() => setSelectedMember(member.id)}
+                onClick={() => setTempSelectedMember(member.id)}
               >
                 <Avatar className="mr-2 size-8">
                   <AvatarImage
@@ -117,6 +127,11 @@ export function SelectTeamMemberSheet({
             </div>
           )}
         </div>
+        <SheetFooter className="mt-6">
+          <SheetClose asChild>
+            <Button type="submit" onClick={handleSave}>Save</Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

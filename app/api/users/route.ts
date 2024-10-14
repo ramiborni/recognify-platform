@@ -11,7 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import { prisma } from "@/lib/db";
 
 export const GET = async (req, res) => {
-  const token: string = req.headers.get("Authorization").replace("Bearer ", "");
+  const token: string = (req.headers.get("Authorization") || "").replace("Bearer ", "");
 
   const validationResult: jwtValidationResponse = await validateToken({
     token,
@@ -51,13 +51,8 @@ export const GET = async (req, res) => {
 };
 
 export const POST = async (req: Request, res) => {
-  const authHeader: string = req.headers.get("Authorization")!;
-  if (!authHeader || typeof authHeader !== "string") {
-    return new Response("Authorization header missing or invalid", {
-      status: 401,
-    });
-  }
-  const token: string = authHeader.replace("Bearer ", "");
+  const token: string = (req.headers.get("Authorization") || "").replace("Bearer ", "");
+
   const validationResult: jwtValidationResponse = await validateToken({
     token,
     domain: process.env.KINDE_ISSUER_URL,

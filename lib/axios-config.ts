@@ -4,8 +4,6 @@ import axiosRetry from "axios-retry";
 import { env } from "@/env.mjs";
 
 export const axiosConfig = (accessToken: string) => {
-  console.log(accessToken);
-
   // Set the base URL and headers for all requests
   axios.defaults.baseURL = env.NEXT_PUBLIC_APP_URL;
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;

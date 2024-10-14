@@ -21,6 +21,7 @@ import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 import Plans from "./components/Plans";
 import OrgModel from "./dashboard/components/org-model";
+import axios from "axios";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -28,8 +29,11 @@ interface ProtectedLayoutProps {
 
 export default async function Dashboard({ children }: ProtectedLayoutProps) {
   const { getAccessTokenRaw, getUser } = await getKindeServerSession();
-  const kindeUser = await getUser();
   axiosConfig(await getAccessTokenRaw());
+
+ 
+
+  const kindeUser = await getUser();
 
   const heads = headers();
 

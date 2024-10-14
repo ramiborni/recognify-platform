@@ -217,9 +217,10 @@ export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
                     {siteConfig.name}
                   </span>
                 </Link>
-
+                {/*
                 <ProjectSwitcher large />
 
+                  */}
                 {links.map((section) => (
                   <section
                     key={section.title}
