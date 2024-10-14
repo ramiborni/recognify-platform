@@ -71,7 +71,7 @@ model TeamInvitation {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String
-  team      Team     @relation(fields: [teamId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
   token     String   @unique
   expires   DateTime
@@ -91,9 +91,9 @@ model VerificationToken {
 model Recognition {
   id         String              @id @default(cuid())
   message    String
-  giver      User                @relation("GivenRecognitions", fields: [giverId], references: [id])
+  giver      User                @relation("GivenRecognitions", fields: [giverId], references: [id], onDelete: Cascade)
   giverId    String
-  receiver   User                @relation("ReceivedRecognitions", fields: [receiverId], references: [id])
+  receiver   User                @relation("ReceivedRecognitions", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String
   isPublic   Boolean             @default(false)
   points     Int
@@ -112,8 +112,8 @@ model Clap {
   recognitionId String
   createdAt     DateTime @default(now())
 
-  user        User        @relation(fields: [userId], references: [id])
-  recognition Recognition @relation(fields: [recognitionId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recognition Recognition @relation(fields: [recognitionId], references: [id], onDelete: Cascade)
 
   @@unique([userId, recognitionId])
 }
@@ -133,7 +133,7 @@ model Survey {
   description String
   questions   Json[]
   responses   Feedback[]
-  team        Team         @relation(fields: [teamId], references: [id])
+  team        Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId      String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

@@ -186,13 +186,6 @@ export const GET = async (req: Request, res: Response) => {
       return new Response("User not found", { status: 404 });
     }
 
-    // Check if the user has the TEAM_LEADER role
-    if (user.role !== UserRole.TEAM_LEADER) {
-      return new Response("You are not authorized to perform this action", {
-        status: 401,
-      });
-    }
-
     // Check if the user is part of a team
     if (!user.teamId) {
       return new Response("You are not part of a team", {
