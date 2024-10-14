@@ -31,7 +31,7 @@ const FirstThingsToDo = ({ role }: FirstThingsToDoProps) => {
       icon: <UsersIcon className="size-6" />,
       title: "Invite your team",
       description: "Invite your team to send them recognations and feedbacks.",
-      href: "/dashboard/team/",
+      href: "/dashboard/teams/",
       role: [UserRole.TEAM_LEADER],
     },
     {
@@ -60,7 +60,7 @@ const FirstThingsToDo = ({ role }: FirstThingsToDoProps) => {
       icon: <SlackIcon className="size-6" />,
       title: "Join our Slack community",
       description: "Join our Slack community to get support and updates.",
-      href: "https://join.slack.com/",
+      href: "https://join.slack.com/t/sendlerai/shared_invite/zt-2scgib63b-JPPw7itkblrw8o0UcEgsog",
       role: [UserRole.TEAM_LEADER],
     },
   ];
