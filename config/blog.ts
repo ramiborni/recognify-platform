@@ -39,7 +39,7 @@ export const BLOG_CATEGORIES: {
 export const BLOG_AUTHORS = {
   ramiborni: {
     name: "Rami Borni",
-    image: "/_static/avatars/mickasmt.png",
+    image: "/_static/avatars/ramiborni.jpeg",
     twitter: "ramiborni",
   },
 };
