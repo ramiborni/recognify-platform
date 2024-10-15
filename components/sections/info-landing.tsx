@@ -49,7 +49,7 @@ export default function InfoLanding({
         >
           <div className="aspect-square">
             <Image
-              className="size-full object-cover object-center"
+              className="size-full object-cover object-center dark:invert"
               src={data.image}
               alt={data.title}
               width={1000}

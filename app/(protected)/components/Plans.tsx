@@ -56,7 +56,7 @@ export default async function Plans() {
         Boost your team spirits and productivity with Recognify!
       </h1>
       <p className="mb-8 text-center text-xl text-gray-600">
-        Choose the plan that fits your team and watch motivation soar!
+        Choose the plan that fits your team and watch motivation rise!
       </p>
       <div className="mb-12 rounded-lg bg-blue-50 p-4 text-center">
         <h2 className="mb-2 text-2xl font-bold text-blue-800">

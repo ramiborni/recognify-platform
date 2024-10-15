@@ -26,7 +26,9 @@ export default function IndexPage() {
       <div className="py-16"></div>
       <PricingCards />
       <div className="py-16"></div>
-      <PricingFaq />
+      {/*
+        <PricingFaq />
+        */}
       <div className="py-16"></div>
       {/*
         <Testimonials />

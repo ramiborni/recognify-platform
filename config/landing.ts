@@ -4,7 +4,7 @@ export const infos: InfoLdg[] = [
   {
     title: "Why is Recognify the best for your team?",
     description:
-      "Remote work can feel isolating, but Recognify ensures your team feels valued and connected.",
+      "Recognify ensures your team feels valued and connected.",
     image: "/_static/illustrations/work-party.svg",
     list: [
       {

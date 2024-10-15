@@ -22,8 +22,8 @@ export default function BentoGrid() {
                 Peer Recognition
               </h2>
               <p className="mt-4 text-center text-muted-foreground">
-                Bridge the distance gap and foster a culture of appreciation,
-                even when your team is spread across time zones.
+                Close the distance and create a culture of appreciation, even
+                when your team works in different time zones.
               </p>
             </div>
           </div>
@@ -55,7 +55,7 @@ export default function BentoGrid() {
               </div>
                 */}
               <h2 className="mt-6 text-center font-heading text-3xl md:text-4xl lg:text-[40px]">
-                Pulse Surveys
+                Quick Surveys
               </h2>
               <p className="mt-4 text-center text-muted-foreground">
                 Stay connected with your team&apos;s well-being and quickly

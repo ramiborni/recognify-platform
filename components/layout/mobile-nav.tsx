@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import {
+  RegisterLink,
+  useKindeBrowserClient,
+} from "@kinde-oss/kinde-auth-nextjs";
 import { Menu, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -101,34 +105,21 @@ export function NavMobile() {
           ) : (
             <>
               <li className="py-3">
-                <Link
-                  href="/login"
-                  onClick={() => setOpen(false)}
-                  className="flex w-full font-medium capitalize"
-                >
-                  Login
-                </Link>
-              </li>
-
-              <li className="py-3">
-                <Link
-                  href="/register"
-                  onClick={() => setOpen(false)}
-                  className="flex w-full font-medium capitalize"
-                >
-                  Sign up
-                </Link>
+                <RegisterLink className="flex w-full font-medium capitalize">
+                  Get Started
+                </RegisterLink>
               </li>
             </>
           )}
         </ul>
-
-        {documentation ? (
+        {/*
+ {documentation ? (
           <div className="mt-8 block md:hidden">
             <DocsSidebarNav setOpen={setOpen} />
           </div>
         ) : null}
 
+ */}
         <div className="mt-5 flex items-center justify-end space-x-4">
           {/*
                       <ModeToggle />

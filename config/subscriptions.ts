@@ -4,21 +4,21 @@ import { env } from "@/env.mjs";
 export const pricingData: SubscriptionPlan[] = [
   {
     title: "Starter",
-    description: "For Beginners",
+    description: "For Startups",
     benefits: [
-      "Up to 100 monthly posts",
-      "Basic analytics and reporting",
-      "Access to standard templates",
+      "20 team members",
+      "10 surveys per month",
+      "Unlimited recognitions",
+      "Full survey analytics",
+      "Slack Integration",
+      "Chat & email support"
     ],
     limitations: [
-      "No priority access to new features.",
-      "Limited customer support",
-      "No custom branding",
-      "Limited access to business resources.",
+
     ],
     prices: {
-      monthly: 0,
-      yearly: 0,
+      monthly: 127,
+      yearly: 127,
     },
     stripeIds: {
       monthly: null,
@@ -26,29 +26,30 @@ export const pricingData: SubscriptionPlan[] = [
     },
   },
   {
-    title: "Pro",
-    description: "Unlock Advanced Features",
+    title: "Growth",
+    description: "For mid to big companies",
     benefits: [
-      "Up to 500 monthly posts",
-      "Advanced analytics and reporting",
-      "Access to business templates",
-      "Priority customer support",
-      "Exclusive webinars and training.",
+      "100 team members",
+      "Unlimited surveys",
+      "Unlimited recognitions",
+      "Full survey analytics",
+      "Slack Integration",
+      "Chat & email support"
     ],
     limitations: [
-      "No custom branding",
-      "Limited access to business resources.",
+
     ],
     prices: {
-      monthly: 15,
-      yearly: 144,
+      monthly: 387,
+      yearly: 387,
     },
     stripeIds: {
-      monthly: env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID,
-      yearly: env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID,
+      monthly: null,
+      yearly: null,
     },
   },
-  {
+  /*
+    {
     title: "Business",
     description: "For Power Users",
     benefits: [
@@ -68,6 +69,7 @@ export const pricingData: SubscriptionPlan[] = [
       yearly: env.NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID,
     },
   },
+  */
 ];
 
 export const plansColumns = [

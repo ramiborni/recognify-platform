@@ -3,6 +3,7 @@
 import { useContext, useState } from "react";
 import Link from "next/link";
 import { UserSubscriptionPlan } from "@/types";
+import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 
 import { SubscriptionPlan } from "@/types/index";
 import { pricingData } from "@/config/subscriptions";
@@ -25,7 +26,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
     !subscriptionPlan?.stripeCustomerId || subscriptionPlan.interval === "year"
       ? true
       : false;
-  const [isYearly, setIsYearly] = useState<boolean>(!!isYearlyDefault);
+  const [isYearly, setIsYearly] = useState<boolean>(false);
   const { setShowSignInModal } = useContext(ModalContext);
 
   const toggleBilling = () => {
@@ -37,7 +38,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
       <div
         className={cn(
           "relative flex flex-col overflow-hidden rounded-3xl border shadow-sm",
-          offer.title.toLocaleLowerCase() === "pro"
+          offer.title.toLocaleLowerCase() === "growth"
             ? "-m-0.5 border-2 border-purple-400"
             : "",
         )}
@@ -62,18 +63,22 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                   `$${offer.prices.monthly}`
                 )}
               </div>
-              <div className="-mb-1 ml-2 text-left text-sm font-medium text-muted-foreground">
-                <div>/month</div>
-              </div>
             </div>
           </div>
-          {offer.prices.monthly > 0 ? (
+          <div className="text-left text-sm text-muted-foreground">
+            One-time payment for lifetime access
+          </div>
+
+          {/*
+
+{offer.prices.monthly > 0 ? (
             <div className="text-left text-sm text-muted-foreground">
               {isYearly
                 ? `$${offer.prices.yearly} will be charged when annual`
                 : "when charged monthly"}
             </div>
           ) : null}
+            */}
         </div>
 
         <div className="flex h-full flex-col justify-between gap-16 p-6">
@@ -115,17 +120,19 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
               <></>
             )
           ) : (
-            <Button
-              variant={
-                offer.title.toLocaleLowerCase() === "pro"
-                  ? "default"
-                  : "outline"
-              }
-              rounded="full"
-              onClick={() => setShowSignInModal(true)}
-            >
-              Sign in
-            </Button>
+            <LoginLink>
+              <Button
+                variant={
+                  offer.title.toLocaleLowerCase() === "growth"
+                    ? "default"
+                    : "outline"
+                }
+                rounded="full"
+                className="w-full"
+              >
+                Get Started Now
+              </Button>
+            </LoginLink>
           )}
         </div>
       </div>
@@ -135,9 +142,12 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
   return (
     <MaxWidthWrapper>
       <section className="flex flex-col items-center text-center">
-        <HeaderSection label="Pricing" title="Start at full speed !" />
-
-        <div className="mb-4 mt-10 flex items-center gap-5">
+        <HeaderSection
+          label="Pricing"
+          title="Start recognizing your team now!"
+        />
+        <div className="mb-4 mt-10 flex h-2 items-center gap-5">
+          {/*
           <ToggleGroup
             type="single"
             size="sm"
@@ -161,9 +171,10 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
               Monthly
             </ToggleGroupItem>
           </ToggleGroup>
+    */}
         </div>
 
-        <div className="grid gap-5 bg-inherit py-5 lg:grid-cols-3">
+        <div className="grid min-w-full gap-5 bg-inherit py-5 lg:grid-cols-2 lg:px-36">
           {pricingData.map((offer) => (
             <PricingCard offer={offer} key={offer.title} />
           ))}
@@ -172,6 +183,10 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
         <p className="mt-3 text-balance text-center text-base text-muted-foreground">
           Limited time offer: One-time fee because everyone deserves to be
           recognized!
+        </p>
+
+        <p className="mt-3 text-balance text-center text-base text-muted-foreground">
+          All plans come with a 30-day money-back guarantee. No questions asked.
         </p>
       </section>
     </MaxWidthWrapper>
