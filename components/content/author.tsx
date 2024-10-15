@@ -13,6 +13,8 @@ export default async function Author({
 }) {
   const authors = BLOG_AUTHORS;
 
+  console.log(authors, username);
+
   return imageOnly ? (
     <BlurImage
       src={authors[username].image}

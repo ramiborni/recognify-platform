@@ -41,7 +41,7 @@ export function constructMetadata({
     ],
     authors: [
       {
-        name: "mickasmt",
+        name: "Rami Borni",
       },
     ],
     creator: "mickasmt",
@@ -58,7 +58,7 @@ export function constructMetadata({
       title,
       description,
       images: [image],
-      creator: "@miickasmt",
+      creator: "@ramiborni",
     },
     icons,
     metadataBase: new URL(siteConfig.url),

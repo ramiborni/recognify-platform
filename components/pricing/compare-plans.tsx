@@ -11,6 +11,7 @@ import { HeaderSection } from "@/components/shared/header-section";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 export function ComparePlans() {
+  
   const renderCell = (value: string | boolean | null) => {
     if (value === null) return "—";
     if (typeof value === "boolean")
