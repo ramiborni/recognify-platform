@@ -117,7 +117,18 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                 Go to dashboard
               </Link>
             ) : (
-              <></>
+              <Link
+                href="/dashboard"
+                className={cn(
+                  buttonVariants({
+                    variant: "outline",
+                    rounded: "full",
+                  }),
+                  "w-full",
+                )}
+              >
+                Go to dashboard
+              </Link>
             )
           ) : (
             <LoginLink>

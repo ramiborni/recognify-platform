@@ -9,34 +9,28 @@ import { HeaderSection } from "../shared/header-section";
 
 const pricingFaqData = [
   {
-    id: "item-1",
-    question: "What is the cost of the free plan?",
-    answer:
-      "Our free plan is completely free, with no monthly or annual charges. It's a great way to get started and explore our basic features.",
-  },
-  {
     id: "item-2",
-    question: "How much does the Basic Monthly plan cost?",
+    question: "What is the Lifetime Deal (LTD) price?",
     answer:
-      "The Basic Monthly plan is priced at $15 per month. It provides access to our core features and is billed on a monthly basis.",
+      "Our LTD is a one-time payment of $127 for starter plan and $387 for growth plan, giving you access to all core features with no recurring fees. It's a great deal to unlock long-term value with no monthly or yearly payments.",
   },
   {
     id: "item-3",
-    question: "What is the price of the Pro Monthly plan?",
+    question: "What does the LTD include?",
     answer:
-      "The Pro Monthly plan is available for $25 per month. It offers advanced features and is billed on a monthly basis for added flexibility.",
+      "With the LTD, you'll get lifetime access to our Pro features, unlimited recognitions, team management tools, and future updates at no extra cost.",
   },
   {
     id: "item-4",
-    question: "Do you offer any annual subscription plans?",
+    question: "Are there any additional charges after purchasing the LTD?",
     answer:
-      "Yes, we offer annual subscription plans for even more savings. The Basic Annual plan is $144 per year, and the Pro Annual plan is $300 per year.",
+      "Nope! Once you’ve paid for the LTD, you’ll have full access with no additional charges—ever.",
   },
   {
     id: "item-5",
-    question: "Is there a trial period for the paid plans?",
+    question: "Is there a refund policy for the LTD?",
     answer:
-      "We offer a 14-day free trial for both the Pro Monthly and Pro Annual plans. It's a great way to experience all the features before committing to a paid subscription.",
+      "Yes, we offer a 30-day money-back guarantee. If you're not satisfied, you can request a full refund within 30 days of purchase.",
   },
 ];
 
@@ -46,7 +40,7 @@ export function PricingFaq() {
       <HeaderSection
         label="FAQ"
         title="Frequently Asked Questions"
-        subtitle="Explore our comprehensive FAQ to find quick answers to common
+        subtitle="Explore our FAQ to find quick answers to common
           inquiries. If you need further assistance, don't hesitate to
           contact us for personalized help."
       />
@@ -64,3 +58,4 @@ export function PricingFaq() {
     </section>
   );
 }
+

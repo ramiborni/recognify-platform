@@ -19,30 +19,22 @@ export const siteConfig: SiteConfig = {
 
 export const footerLinks: SidebarNavItem[] = [
   {
-    title: "Company",
+    title: "About Recognify",
     items: [
-      { title: "About", href: "#" },
-      { title: "Enterprise", href: "#" },
+      { title: "Pricing", href: "/pricing" },
       { title: "Terms", href: "/terms" },
       { title: "Privacy", href: "/privacy" },
     ],
   },
   {
-    title: "Product",
+    title: "News",
     items: [
-      { title: "Security", href: "#" },
-      { title: "Customization", href: "#" },
-      { title: "Customers", href: "#" },
-      { title: "Changelog", href: "#" },
+      { title: "Blog", href: "/blog" },
+      { title: "Roadmap", href: "https://recognify.featurebase.app/roadmap" },
     ],
   },
   {
-    title: "Docs",
-    items: [
-      { title: "Introduction", href: "#" },
-      { title: "Installation", href: "#" },
-      { title: "Components", href: "#" },
-      { title: "Code Blocks", href: "#" },
-    ],
+    title: "Support",
+    items: [{ title: "Contact us", href: "mailto:rami@recognify.io" }],
   },
 ];

@@ -12,6 +12,12 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
     <footer className={cn("border-t", className)}>
       <div className="container grid max-w-6xl grid-cols-2 gap-6 py-14 md:grid-cols-5">
+        <Link href="/" className="flex items-center space-x-1.5">
+          <Icons.logo className="size-10" />
+          <span className="font-urban text-2xl font-bold text-primary">
+            {siteConfig.name}
+          </span>
+        </Link>
         {footerLinks.map((section) => (
           <div key={section.title}>
             <span className="text-sm font-medium text-foreground">

@@ -74,92 +74,51 @@ export const pricingData: SubscriptionPlan[] = [
 
 export const plansColumns = [
   "starter",
-  "pro",
-  "business",
-  "enterprise",
+  "growth",
 ] as const;
 
 export const comparePlans: PlansRow[] = [
   {
-    feature: "Access to Analytics",
-    starter: true,
-    pro: true,
-    business: true,
-    enterprise: "Custom",
-    tooltip: "All plans include basic analytics for tracking performance.",
+    feature: "Team Members",
+    starter: "Up to 20",
+    growth: "Up to 100",
+    tooltip: "The Starter plan supports up to 20 members, while Growth supports 100."
   },
   {
-    feature: "Custom Branding",
-    starter: null,
-    pro: "500/mo",
-    business: "1,500/mo",
-    enterprise: "Unlimited",
-    tooltip: "Custom branding is available from the Pro plan onwards.",
+    feature: "Surveys per Month",
+    starter: "10 surveys",
+    growth: "Unlimited surveys",
+    tooltip: "The Starter plan allows 10 surveys per month. Growth offers unlimited surveys."
+  },
+  {
+    feature: "Recognitions",
+    starter: "Unlimited",
+    growth: "Unlimited",
+    tooltip: "Both plans provide unlimited recognitions to ensure your team feels valued."
+  },
+  {
+    feature: "Full Survey Analytics",
+    starter: true,
+    growth: true,
+    tooltip: "Access full survey analytics with both Starter and Growth plans."
+  },
+  {
+    feature: "Slack Integration",
+    starter: true,
+    growth: true,
+    tooltip: "Stay connected with your team via Slack integration in both plans."
+  },
+  {
+    feature: "Support",
+    starter: "Chat & Email",
+    growth: "Chat & Email",
+    tooltip: "Both plans include access to chat and email support for assistance."
   },
   {
     feature: "Priority Support",
-    starter: null,
-    pro: "Email",
-    business: "Email & Chat",
-    enterprise: "24/7 Support",
-  },
-  {
-    feature: "Advanced Reporting",
-    starter: null,
-    pro: null,
-    business: true,
-    enterprise: "Custom",
-    tooltip:
-      "Advanced reporting is available in Business and Enterprise plans.",
-  },
-  {
-    feature: "Dedicated Manager",
-    starter: null,
-    pro: null,
-    business: null,
-    enterprise: true,
-    tooltip: "Enterprise plan includes a dedicated account manager.",
-  },
-  {
-    feature: "API Access",
-    starter: "Limited",
-    pro: "Standard",
-    business: "Enhanced",
-    enterprise: "Full",
-  },
-  {
-    feature: "Monthly Webinars",
     starter: false,
-    pro: true,
-    business: true,
-    enterprise: "Custom",
-    tooltip: "Pro and higher plans include access to monthly webinars.",
+    growth: true,
+    tooltip: "Priority support is not included in these plans."
   },
-  {
-    feature: "Custom Integrations",
-    starter: false,
-    pro: false,
-    business: "Available",
-    enterprise: "Available",
-    tooltip:
-      "Custom integrations are available in Business and Enterprise plans.",
-  },
-  {
-    feature: "Roles and Permissions",
-    starter: null,
-    pro: "Basic",
-    business: "Advanced",
-    enterprise: "Advanced",
-    tooltip:
-      "User roles and permissions management improves with higher plans.",
-  },
-  {
-    feature: "Onboarding Assistance",
-    starter: false,
-    pro: "Self-service",
-    business: "Assisted",
-    enterprise: "Full Service",
-    tooltip: "Higher plans include more comprehensive onboarding assistance.",
-  },
-  // Add more rows as needed
+  // You can add more features as needed
 ];
