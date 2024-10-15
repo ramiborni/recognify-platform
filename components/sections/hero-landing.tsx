@@ -5,6 +5,7 @@ import {
   RegisterLink,
   useKindeBrowserClient,
 } from "@kinde-oss/kinde-auth-nextjs";
+import { PlayIcon } from "lucide-react";
 
 import { env } from "@/env.mjs";
 import { siteConfig } from "@/config/site";
@@ -58,21 +59,24 @@ export default function HeroLanding() {
             <span>Start Recognizing</span>
             <Icons.arrowRight className="size-4" />
           </RegisterLink>
-          <Button
-            variant="ghost"
-            className={cn(
-              buttonVariants({
-                variant: "outline",
-                size: "lg",
-                rounded: "full",
-              }),
-              "px-5",
-            )}
-          >
-            <p>
-              <span className="hidden sm:inline-block">Watch Demo</span>
-            </p>
-          </Button>
+          <Link href="https://www.loom.com/share/97dd9fd0f57f4bc3b89fbe8741136c31?source=embed_watch_on_loom_cta&t=22">
+            <Button
+              variant="ghost"
+              className={cn(
+                buttonVariants({
+                  variant: "outline",
+                  size: "lg",
+                  rounded: "full",
+                }),
+                "px-5",
+              )}
+            >
+              <p>
+                <span className="hidden sm:inline-block">Watch Demo</span>
+                <PlayIcon className="inline-block size-6 md:hidden"></PlayIcon>
+              </p>
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

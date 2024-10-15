@@ -4,18 +4,19 @@ import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 export default function PreviewLanding() {
   return (
-    <div className="pb-6 sm:pb-16">
+    <div className="py-12">
+      <div  className="pb-6 sm:pb-16">
       <MaxWidthWrapper>
         <div className="rounded-xl md:bg-muted/30 md:ring-1 md:ring-inset md:ring-border">
           <div className="relative aspect-video overflow-hidden rounded-xl border md:rounded-lg">
-            <div
+            <div 
               style={{
                 position: "relative",
                 paddingBottom: "62.5%",
                 height: 0,
               }}
             >
-              <iframe
+              <iframe id="demo" 
                 src="https://www.loom.com/embed/97dd9fd0f57f4bc3b89fbe8741136c31?sid=1c3d4975-e6c6-45bc-bc9c-03969fad5295"
                 frameBorder={0}
                 allowFullScreen
@@ -31,6 +32,7 @@ export default function PreviewLanding() {
           </div>
         </div>
       </MaxWidthWrapper>
+    </div>
     </div>
   );
 }
