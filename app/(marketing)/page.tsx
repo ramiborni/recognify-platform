@@ -10,6 +10,13 @@ import Integrations from "@/components/sections/integrations";
 import Powered from "@/components/sections/powered";
 import PreviewLanding from "@/components/sections/preview-landing";
 import Testimonials from "@/components/sections/testimonials";
+import { constructMetadata } from "@/lib/utils";
+
+export const metadata = constructMetadata({
+  title: "Recognify - Boost Team Engagement with Easy Feedback and Recognition",
+  description: "Recognify makes it simple for teams to give feedback, share recognition, and improve engagement. Help your workplace grow stronger with quick surveys and real-time insights.",
+});
+
 
 export default function IndexPage() {
   return (
