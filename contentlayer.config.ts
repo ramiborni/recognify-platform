@@ -28,6 +28,7 @@ const defaultComputedFields: ComputedFields = {
   },
 };
 
+
 export const Doc = defineDocumentType(() => ({
   name: "Doc",
   filePathPattern: `docs/**/*.mdx`,
@@ -109,7 +110,7 @@ export const Post = defineDocumentType(() => ({
       type: "list",
       of: {
         type: "enum",
-        options: ["news", "education"],
+        options: ["news", "workplace-culture", "hr", "leadership", "employee-engagement", "team-feedback"],
         default: "news",
       },
       required: true,
